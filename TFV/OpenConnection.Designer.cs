@@ -62,7 +62,7 @@
             label1.Dock = System.Windows.Forms.DockStyle.Fill;
             label1.Location = new System.Drawing.Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(446, 30);
+            label1.Size = new System.Drawing.Size(415, 30);
             label1.TabIndex = 1;
             label1.Text = "Select a connection or enter a new one:";
             label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -107,7 +107,7 @@
             this.tableLayoutPanel1.SetColumnSpan(flowLayoutPanel1, 2);
             flowLayoutPanel1.Controls.Add(this.btnOk);
             flowLayoutPanel1.Controls.Add(this.btnCancel);
-            flowLayoutPanel1.Location = new System.Drawing.Point(389, 219);
+            flowLayoutPanel1.Location = new System.Drawing.Point(358, 170);
             flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new System.Drawing.Size(162, 29);
@@ -119,7 +119,7 @@
             this.btnOk.Location = new System.Drawing.Point(3, 3);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
-            this.btnOk.TabIndex = 11;
+            this.btnOk.TabIndex = 9;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -131,7 +131,7 @@
             this.btnCancel.Location = new System.Drawing.Point(84, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 12;
+            this.btnCancel.TabIndex = 10;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -180,7 +180,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(551, 248);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(520, 199);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // btnConnections
@@ -189,7 +189,7 @@
             this.btnConnections.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnConnections.Image = ((System.Drawing.Image)(resources.GetObject("btnConnections.Image")));
             this.btnConnections.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnConnections.Location = new System.Drawing.Point(456, 3);
+            this.btnConnections.Location = new System.Drawing.Point(425, 3);
             this.btnConnections.Name = "btnConnections";
             this.btnConnections.Size = new System.Drawing.Size(92, 24);
             this.btnConnections.TabIndex = 2;
@@ -206,8 +206,8 @@
             this.tableLayoutPanel1.SetColumnSpan(this.tbServer, 2);
             this.tbServer.Location = new System.Drawing.Point(74, 33);
             this.tbServer.Name = "tbServer";
-            this.tbServer.Size = new System.Drawing.Size(375, 20);
-            this.tbServer.TabIndex = 6;
+            this.tbServer.Size = new System.Drawing.Size(344, 20);
+            this.tbServer.TabIndex = 3;
             // 
             // tbUser
             // 
@@ -216,8 +216,8 @@
             this.tbUser.Enabled = false;
             this.tbUser.Location = new System.Drawing.Point(74, 82);
             this.tbUser.Name = "tbUser";
-            this.tbUser.Size = new System.Drawing.Size(375, 20);
-            this.tbUser.TabIndex = 7;
+            this.tbUser.Size = new System.Drawing.Size(344, 20);
+            this.tbUser.TabIndex = 5;
             // 
             // tbWorkspace
             // 
@@ -225,15 +225,15 @@
             this.tableLayoutPanel1.SetColumnSpan(this.tbWorkspace, 2);
             this.tbWorkspace.Location = new System.Drawing.Point(74, 135);
             this.tbWorkspace.Name = "tbWorkspace";
-            this.tbWorkspace.Size = new System.Drawing.Size(375, 20);
-            this.tbWorkspace.TabIndex = 8;
+            this.tbWorkspace.Size = new System.Drawing.Size(344, 20);
+            this.tbWorkspace.TabIndex = 7;
             // 
             // btnBrowseWorkspace
             // 
-            this.btnBrowseWorkspace.Location = new System.Drawing.Point(455, 134);
+            this.btnBrowseWorkspace.Location = new System.Drawing.Point(424, 134);
             this.btnBrowseWorkspace.Name = "btnBrowseWorkspace";
             this.btnBrowseWorkspace.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowseWorkspace.TabIndex = 10;
+            this.btnBrowseWorkspace.TabIndex = 8;
             this.btnBrowseWorkspace.Text = "B&rowse";
             this.btnBrowseWorkspace.UseVisualStyleBackColor = true;
             this.btnBrowseWorkspace.Click += new System.EventHandler(this.btnBrowseWorkspace_Click);
@@ -247,7 +247,7 @@
             this.cbNTLM.Location = new System.Drawing.Point(74, 59);
             this.cbNTLM.Name = "cbNTLM";
             this.cbNTLM.Size = new System.Drawing.Size(155, 17);
-            this.cbNTLM.TabIndex = 13;
+            this.cbNTLM.TabIndex = 4;
             this.cbNTLM.Text = "Use Existing Authentication";
             this.cbNTLM.UseVisualStyleBackColor = true;
             this.cbNTLM.CheckedChanged += new System.EventHandler(this.cbNTLM_CheckedChanged);
@@ -259,8 +259,8 @@
             this.tbPassword.Enabled = false;
             this.tbPassword.Location = new System.Drawing.Point(74, 108);
             this.tbPassword.Name = "tbPassword";
-            this.tbPassword.Size = new System.Drawing.Size(375, 20);
-            this.tbPassword.TabIndex = 15;
+            this.tbPassword.Size = new System.Drawing.Size(344, 20);
+            this.tbPassword.TabIndex = 6;
             this.tbPassword.UseSystemPasswordChar = true;
             // 
             // OpenConnection
@@ -269,7 +269,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(575, 272);
+            this.ClientSize = new System.Drawing.Size(544, 223);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
