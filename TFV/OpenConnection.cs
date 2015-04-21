@@ -5,12 +5,16 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.Framework.Common;
+using Microsoft.TeamFoundation.VersionControl.Client;
+using Microsoft.TeamFoundation.VersionControl.Controls;
 using Microsoft.TeamFoundation;
+using Microsoft.TeamFoundation.Framework.Common;
+using Microsoft.VisualStudio.Services.Common;
 
 namespace TFV
 {
@@ -21,19 +25,23 @@ namespace TFV
             InitializeComponent();
         }
 
-        private SimpleWebTokenCredential localCreds = null;
-
         private TfsClientCredentials GetCredentials(Uri serverUri)
         {
+
             if (cbNTLM.Checked)
             {
-                localCreds = null;
-                return TfsClientCredentials.LoadCachedCredentials(serverUri, true, true);
+                   return TfsClientCredentials.LoadCachedCredentials(serverUri, true, true);
             }
             else
             {
-                localCreds = new SimpleWebTokenCredential(tbUser.Text, tbPassword.Text);
-                return new TfsClientCredentials(localCreds);
+                string[] domainUser = tbUser.Text.Split('\\');
+                NetworkCredential netCred = null;
+                if (domainUser.Length > 1)
+                    netCred = new NetworkCredential(domainUser[1], tbPassword.Text, domainUser[0]);
+                else
+                    netCred = new NetworkCredential(tbUser.Text, tbPassword.Text);
+                BasicAuthCredential cred = new BasicAuthCredential(netCred);
+                return new TfsClientCredentials(cred);
             }
         }
 
@@ -49,9 +57,8 @@ namespace TFV
 
         public void ApplyConnection(SavedConnection connection)
         {
-            localCreds = connection.Credentials;
-            cbNTLM.Checked = localCreds == null;
-            tbUser.Text = localCreds != null ? localCreds.UserName : "";
+            cbNTLM.Checked = connection.UserName == null;
+            tbUser.Text = connection.UserName != null ? connection.UserName : "";
             tbPassword.Text = "";
             tbServer.Text = connection.ProjectURL.ToString();
         }
@@ -77,6 +84,19 @@ namespace TFV
 
         private void btnBrowseWorkspace_Click(object sender, EventArgs e)
         {
+            TfsTeamProjectCollection prj = ConnectAndCacheCredentials();
+            if (prj != null)
+            {
+                SelectWorkspace ws = new SelectWorkspace(prj.GetService<VersionControlServer>(), tbWorkspace.Text);
+                if (ws.ShowDialog(this) == System.Windows.Forms.DialogResult.OK && ws.WSName != null)
+                {
+                    tbWorkspace.Text = ws.WSName.Name;
+                }
+            }
+        }
+
+        private TfsTeamProjectCollection ConnectAndCacheCredentials()
+        {
             Uri serverUri = null;
             try
             {
@@ -85,24 +105,60 @@ namespace TFV
             catch (FormatException ex)
             {
                 MessageBox.Show(this, "Invalid server URL: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return null;
             }
             TfsClientCredentials cred = GetCredentials(serverUri);
-            TfsConfigurationServer cfgServer = new TfsConfigurationServer(serverUri, cred);
+            TfsTeamProjectCollection cfgServer = new TfsTeamProjectCollection(serverUri, cred);
             try
             {
                 cfgServer.Connect(ConnectOptions.IncludeServices);
+                return cfgServer;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(this, "Cannot login: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return null;
             }
         }
-
         private void btnOk_Click(object sender, EventArgs e)
         {
+            TfsTeamProjectCollection prj = ConnectAndCacheCredentials();
+            if (prj != null)
+            {
+                var vcs = prj.GetService<VersionControlServer>();
+                try
+                {
+                    Workspace ws = vcs.GetWorkspace(tbWorkspace.Text, vcs.AuthorizedUser);
+                    var list = TFV.Program.Settings.SavedConnnections.Connections;
+                    SavedConnection sc = null;
+                    foreach(var l in list)
+                    {
+                        if (l.ProjectURL == prj.Uri)
+                        {
+                            sc = l;
+                            break;
+                        }
+                    }
 
+                    if (sc == null)
+                    {
+                        sc = new SavedConnection();
+                        list.Add(sc);
+                    }
+
+                    sc.ProjectURL = prj.Uri;
+                    sc.Workspace = ws.Name;
+                    sc.UserName = cbNTLM.Checked ? null : tbUser.Text;
+                    this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                    Close();
+
+                }
+                catch(ItemNotMappedException ex)
+                {
+                    MessageBox.Show(this, "Invalid workspace: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

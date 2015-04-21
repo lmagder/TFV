@@ -18,7 +18,7 @@ namespace TFV
             ConfigurationManager.AppSettings.Set("EnableWindowsFormsHighDpiAutoResizing", "true");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Settings = new Properties.Settings();
+            Settings = Properties.Settings.Default;
             Application.Run(new OpenConnection());
             Settings.Save();
         }

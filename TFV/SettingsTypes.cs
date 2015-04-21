@@ -2,17 +2,21 @@
 using System.Net;
 using System.Collections.Generic;
 using Microsoft.TeamFoundation.Client;
+using System.Runtime.Serialization;
 
 namespace TFV
 {
+    [Serializable]
     public class SavedConnection
     {
         public Uri ProjectURL { get; set; }
-        public SimpleWebTokenCredential Credentials { get; set; }
+        public string UserName { get; set; }
+        public string Workspace { get; set; }
         public SavedConnection()
         {
             ProjectURL = null;
-            Credentials = null;
+            UserName = null;
+            Workspace = null;
         }
         public override string ToString()
         {
@@ -22,6 +26,7 @@ namespace TFV
         }
     }
 
+    [Serializable]
     public class SavedConnectionList
     {
         public List<SavedConnection> Connections { get; set; }
