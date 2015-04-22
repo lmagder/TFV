@@ -66,10 +66,13 @@ namespace TFV
 
         private void OpenConnection_Load(object sender, EventArgs e)
         {
+            cbShowAtStartup.Checked = Program.Settings.ShowConnectionAtStartup;
             var list = TFV.Program.Settings.SavedConnnections.Connections;
             if (list.Count > 0)
             {
                 ApplyConnection(list[0]);
+                if (!cbShowAtStartup.Checked)
+                    btnOk.PerformClick();
             }
             else
             {
@@ -153,6 +156,7 @@ namespace TFV
                     this.DialogResult = System.Windows.Forms.DialogResult.OK;
                     OpenedCollection = prj;
                     SelectedWorkspace = ws;
+                    Program.Settings.ShowConnectionAtStartup = cbShowAtStartup.Checked;
                     Close();
 
                 }

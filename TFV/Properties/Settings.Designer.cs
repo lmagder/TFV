@@ -33,5 +33,17 @@ namespace TFV.Properties {
                 this["SavedConnnections"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowConnectionAtStartup {
+            get {
+                return ((bool)(this["ShowConnectionAtStartup"]));
+            }
+            set {
+                this["ShowConnectionAtStartup"] = value;
+            }
+        }
     }
 }

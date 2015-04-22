@@ -45,6 +45,7 @@
             this.btnBrowseWorkspace = new System.Windows.Forms.Button();
             this.cbNTLM = new System.Windows.Forms.CheckBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
+            this.cbShowAtStartup = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -82,7 +83,7 @@
             // 
             label3.AutoSize = true;
             label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            label3.Location = new System.Drawing.Point(3, 79);
+            label3.Location = new System.Drawing.Point(3, 80);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(65, 26);
             label3.TabIndex = 4;
@@ -93,7 +94,7 @@
             // 
             label4.AutoSize = true;
             label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            label4.Location = new System.Drawing.Point(3, 131);
+            label4.Location = new System.Drawing.Point(3, 132);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(65, 29);
             label4.TabIndex = 5;
@@ -140,7 +141,7 @@
             // 
             label5.AutoSize = true;
             label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            label5.Location = new System.Drawing.Point(3, 105);
+            label5.Location = new System.Drawing.Point(3, 106);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(65, 26);
             label5.TabIndex = 14;
@@ -170,6 +171,7 @@
             this.tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 2, 6);
             this.tableLayoutPanel1.Controls.Add(this.cbNTLM, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.tbPassword, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.cbShowAtStartup, 0, 6);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 7;
@@ -214,7 +216,7 @@
             this.tbUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.SetColumnSpan(this.tbUser, 2);
             this.tbUser.Enabled = false;
-            this.tbUser.Location = new System.Drawing.Point(74, 82);
+            this.tbUser.Location = new System.Drawing.Point(74, 83);
             this.tbUser.Name = "tbUser";
             this.tbUser.Size = new System.Drawing.Size(344, 20);
             this.tbUser.TabIndex = 5;
@@ -223,14 +225,14 @@
             // 
             this.tbWorkspace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.SetColumnSpan(this.tbWorkspace, 2);
-            this.tbWorkspace.Location = new System.Drawing.Point(74, 135);
+            this.tbWorkspace.Location = new System.Drawing.Point(74, 136);
             this.tbWorkspace.Name = "tbWorkspace";
             this.tbWorkspace.Size = new System.Drawing.Size(344, 20);
             this.tbWorkspace.TabIndex = 7;
             // 
             // btnBrowseWorkspace
             // 
-            this.btnBrowseWorkspace.Location = new System.Drawing.Point(424, 134);
+            this.btnBrowseWorkspace.Location = new System.Drawing.Point(424, 135);
             this.btnBrowseWorkspace.Name = "btnBrowseWorkspace";
             this.btnBrowseWorkspace.Size = new System.Drawing.Size(75, 23);
             this.btnBrowseWorkspace.TabIndex = 8;
@@ -244,9 +246,10 @@
             this.cbNTLM.Checked = true;
             this.cbNTLM.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanel1.SetColumnSpan(this.cbNTLM, 2);
+            this.cbNTLM.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cbNTLM.Location = new System.Drawing.Point(74, 59);
             this.cbNTLM.Name = "cbNTLM";
-            this.cbNTLM.Size = new System.Drawing.Size(155, 17);
+            this.cbNTLM.Size = new System.Drawing.Size(161, 18);
             this.cbNTLM.TabIndex = 4;
             this.cbNTLM.Text = "Use Existing Authentication";
             this.cbNTLM.UseVisualStyleBackColor = true;
@@ -257,11 +260,24 @@
             this.tbPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.SetColumnSpan(this.tbPassword, 2);
             this.tbPassword.Enabled = false;
-            this.tbPassword.Location = new System.Drawing.Point(74, 108);
+            this.tbPassword.Location = new System.Drawing.Point(74, 109);
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.Size = new System.Drawing.Size(344, 20);
             this.tbPassword.TabIndex = 6;
             this.tbPassword.UseSystemPasswordChar = true;
+            // 
+            // cbShowAtStartup
+            // 
+            this.cbShowAtStartup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbShowAtStartup.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.cbShowAtStartup, 2);
+            this.cbShowAtStartup.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cbShowAtStartup.Location = new System.Drawing.Point(3, 178);
+            this.cbShowAtStartup.Name = "cbShowAtStartup";
+            this.cbShowAtStartup.Size = new System.Drawing.Size(156, 18);
+            this.cbShowAtStartup.TabIndex = 15;
+            this.cbShowAtStartup.Text = "Show this dialog at startup";
+            this.cbShowAtStartup.UseVisualStyleBackColor = true;
             // 
             // OpenConnection
             // 
@@ -297,6 +313,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox cbNTLM;
         private System.Windows.Forms.TextBox tbPassword;
+        private System.Windows.Forms.CheckBox cbShowAtStartup;
 
 
     }
