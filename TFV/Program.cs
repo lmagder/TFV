@@ -26,12 +26,14 @@ namespace TFV
             if (Settings.SavedConnnections == null)
                 Settings.SavedConnnections = new SavedConnectionList();
 
-            OpenConnection(null);
+            if (!OpenConnection(null))
+                return;
+
             Application.Run();
             return;
         }
 
-        public static void OpenConnection(IWin32Window owner)
+        public static bool OpenConnection(IWin32Window owner)
         {
             TfsTeamProjectCollection projectCollection = null;
             Workspace ws = null;
@@ -46,11 +48,12 @@ namespace TFV
             }
 
             if (projectCollection == null || ws == null)
-                return;
+                return false;
 
             Settings.Save();
             MainForm mf = new MainForm(projectCollection, ws);
             mf.Show();
+            return true;
         }
 
         public static TFV.Properties.Settings Settings { get; private set; }
