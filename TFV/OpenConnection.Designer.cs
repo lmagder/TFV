@@ -117,6 +117,7 @@
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnOk.Location = new System.Drawing.Point(3, 3);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
@@ -129,6 +130,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnCancel.Location = new System.Drawing.Point(84, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
@@ -204,7 +206,7 @@
             // 
             this.tbServer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbServer.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.tbServer.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.AllUrl;
+            this.tbServer.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.RecentlyUsedList;
             this.tableLayoutPanel1.SetColumnSpan(this.tbServer, 2);
             this.tbServer.Location = new System.Drawing.Point(74, 33);
             this.tbServer.Name = "tbServer";
@@ -232,6 +234,7 @@
             // 
             // btnBrowseWorkspace
             // 
+            this.btnBrowseWorkspace.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnBrowseWorkspace.Location = new System.Drawing.Point(424, 135);
             this.btnBrowseWorkspace.Name = "btnBrowseWorkspace";
             this.btnBrowseWorkspace.Size = new System.Drawing.Size(75, 23);
@@ -292,6 +295,7 @@
             this.MinimizeBox = false;
             this.Name = "OpenConnection";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Open Connection";
             this.Load += new System.EventHandler(this.OpenConnection_Load);
             flowLayoutPanel1.ResumeLayout(false);

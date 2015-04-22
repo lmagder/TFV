@@ -32,11 +32,6 @@ namespace TFV
             s_instanceCount++;
         }
 
-        private void openConnectionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Program.OpenConnection(this);
-        }
-
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             s_instanceCount--;
@@ -45,5 +40,21 @@ namespace TFV
                 Application.Exit();
             }
         }
+
+        private void menuOpenConnection_Click(object sender, EventArgs e)
+        {
+            Program.OpenConnection(this);
+        }
+
+        private void menuExit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void menuAbout_Click(object sender, EventArgs e)
+        {
+            (new AboutBox()).ShowDialog(this);
+        }
+
     }
 }

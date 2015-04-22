@@ -28,18 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.MenuItem menuItem1;
+            System.Windows.Forms.MenuItem menuItem3;
+            System.Windows.Forms.MenuItem menuItem2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -48,78 +42,39 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.menuStrip.SuspendLayout();
+            this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
+            this.menuOpenConnection = new System.Windows.Forms.MenuItem();
+            this.menuExit = new System.Windows.Forms.MenuItem();
+            this.statusBar = new System.Windows.Forms.StatusBar();
+            this.menuAbout = new System.Windows.Forms.MenuItem();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.tvServer = new System.Windows.Forms.TreeView();
+            this.tvWorkspace = new System.Windows.Forms.TreeView();
+            menuItem1 = new System.Windows.Forms.MenuItem();
+            menuItem3 = new System.Windows.Forms.MenuItem();
+            menuItem2 = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.tabControl2.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // menuStrip
-            // 
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.editToolStripMenuItem});
-            this.menuStrip.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip.Name = "menuStrip";
-            this.menuStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip.Size = new System.Drawing.Size(888, 24);
-            this.menuStrip.TabIndex = 0;
-            this.menuStrip.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openConnectionToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // openConnectionToolStripMenuItem
-            // 
-            this.openConnectionToolStripMenuItem.Name = "openConnectionToolStripMenuItem";
-            this.openConnectionToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-            this.openConnectionToolStripMenuItem.Text = "&Open Connection...";
-            this.openConnectionToolStripMenuItem.Click += new System.EventHandler(this.openConnectionToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(165, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
-            this.exitToolStripMenuItem.Text = "E&xit";
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 414);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(888, 22);
-            this.statusStrip1.TabIndex = 1;
-            this.statusStrip1.Text = "statusStrip1";
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 49);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 31);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -130,38 +85,9 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(888, 365);
-            this.splitContainer1.SplitterDistance = 277;
+            this.splitContainer1.Size = new System.Drawing.Size(888, 383);
+            this.splitContainer1.SplitterDistance = 290;
             this.splitContainer1.TabIndex = 2;
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripDropDownButton1,
-            this.toolStripComboBox1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(888, 25);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripDropDownButton1
-            // 
-            this.toolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
-            this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
-            // 
-            // toolStripComboBox1
-            // 
-            this.toolStripComboBox1.AutoSize = false;
-            this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 25);
             // 
             // splitContainer2
             // 
@@ -176,7 +102,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tabControl2);
-            this.splitContainer2.Size = new System.Drawing.Size(888, 277);
+            this.splitContainer2.Size = new System.Drawing.Size(888, 290);
             this.splitContainer2.SplitterDistance = 296;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -188,27 +114,29 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(296, 277);
+            this.tabControl1.Size = new System.Drawing.Size(296, 290);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.tvServer);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(288, 251);
+            this.tabPage1.Size = new System.Drawing.Size(288, 264);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.tvWorkspace);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(192, 74);
+            this.tabPage2.Size = new System.Drawing.Size(288, 264);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "Workspace";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tabControl2
@@ -219,7 +147,7 @@
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(588, 277);
+            this.tabControl2.Size = new System.Drawing.Size(588, 290);
             this.tabControl2.TabIndex = 0;
             // 
             // tabPage3
@@ -227,7 +155,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(580, 251);
+            this.tabPage3.Size = new System.Drawing.Size(580, 264);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -237,7 +165,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(192, 74);
+            this.tabPage4.Size = new System.Drawing.Size(580, 288);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -250,9 +178,122 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(888, 84);
+            this.textBox1.Size = new System.Drawing.Size(888, 89);
             this.textBox1.TabIndex = 0;
             this.textBox1.WordWrap = false;
+            // 
+            // mainMenu
+            // 
+            this.mainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            menuItem1,
+            menuItem2});
+            // 
+            // menuItem1
+            // 
+            menuItem1.Index = 0;
+            menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuOpenConnection,
+            menuItem3,
+            this.menuExit});
+            menuItem1.Text = "&File";
+            // 
+            // menuOpenConnection
+            // 
+            this.menuOpenConnection.Index = 0;
+            this.menuOpenConnection.Text = "&Open Connection...";
+            this.menuOpenConnection.Click += new System.EventHandler(this.menuOpenConnection_Click);
+            // 
+            // menuItem3
+            // 
+            menuItem3.Index = 1;
+            menuItem3.Text = "-";
+            // 
+            // menuExit
+            // 
+            this.menuExit.Index = 2;
+            this.menuExit.Text = "E&xit";
+            this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
+            // 
+            // statusBar
+            // 
+            this.statusBar.Location = new System.Drawing.Point(0, 414);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(888, 22);
+            this.statusBar.TabIndex = 0;
+            // 
+            // menuItem2
+            // 
+            menuItem2.Index = 1;
+            menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuAbout});
+            menuItem2.Text = "&Help";
+            // 
+            // menuAbout
+            // 
+            this.menuAbout.Index = 0;
+            this.menuAbout.Text = "&About";
+            this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "arrow_Down_16xSM.png");
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(5, 5);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(852, 21);
+            this.comboBox1.TabIndex = 0;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.button1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.comboBox1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(888, 31);
+            this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.button1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(863, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(22, 25);
+            this.button1.TabIndex = 0;
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // tvServer
+            // 
+            this.tvServer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvServer.Location = new System.Drawing.Point(3, 3);
+            this.tvServer.Name = "tvServer";
+            this.tvServer.Size = new System.Drawing.Size(282, 258);
+            this.tvServer.TabIndex = 0;
+            // 
+            // tvWorkspace
+            // 
+            this.tvWorkspace.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvWorkspace.Location = new System.Drawing.Point(3, 3);
+            this.tvWorkspace.Name = "tvWorkspace";
+            this.tvWorkspace.Size = new System.Drawing.Size(282, 258);
+            this.tvWorkspace.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -260,29 +301,27 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(888, 436);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip);
+            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip;
+            this.Menu = this.mainMenu;
             this.Name = "MainForm";
             this.Text = "TFV";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
-            this.menuStrip.ResumeLayout(false);
-            this.menuStrip.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -290,13 +329,6 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openConnectionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.TabControl tabControl1;
@@ -306,9 +338,17 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
+        private System.Windows.Forms.MainMenu mainMenu;
+        private System.Windows.Forms.MenuItem menuOpenConnection;
+        private System.Windows.Forms.MenuItem menuExit;
+        private System.Windows.Forms.StatusBar statusBar;
+        private System.Windows.Forms.MenuItem menuAbout;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TreeView tvServer;
+        private System.Windows.Forms.TreeView tvWorkspace;
     }
 }
 
