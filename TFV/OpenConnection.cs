@@ -151,6 +151,8 @@ namespace TFV
                     sc.Workspace = ws.Name;
                     sc.UserName = cbNTLM.Checked ? null : tbUser.Text;
                     this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                    OpenedCollection = prj;
+                    SelectedWorkspace = ws;
                     Close();
 
                 }
@@ -166,6 +168,9 @@ namespace TFV
         {
             this.Close();
         }
+
+        public TfsTeamProjectCollection OpenedCollection { get; private set; }
+        public Workspace SelectedWorkspace { get; private set; }
     }
 
 

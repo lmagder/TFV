@@ -18,18 +18,18 @@ namespace TFV
 {
     public partial class SelectWorkspace : Form
     {
-        VersionControlServer server;
-        public Workspace WSName = null;
+        VersionControlServer m_server;
+        public Workspace WSName { get; private set; }
         public SelectWorkspace(VersionControlServer s, string curName)
         {
-            server = s;
+            m_server = s;
             InitializeComponent();
             Populate(curName);
         }
         private void Populate(string curName)
         {
             listView1.Items.Clear();
-            var wsList = server.QueryWorkspaces(null, server.AuthorizedUser, cbThisMachine.Checked ? Environment.MachineName : null);
+            var wsList = m_server.QueryWorkspaces(null, m_server.AuthorizedUser, cbThisMachine.Checked ? Environment.MachineName : null);
             foreach (var w in wsList)
             {
                 var temp = new ListViewItem(new string[] { w.Name, w.Computer, w.Comment });
@@ -72,7 +72,7 @@ namespace TFV
 				return;
 			
 			var wsListInstance = instanceProp.GetValue(null);
-			setServerMethod.Invoke(wsListInstance, new object[] { server });
+			setServerMethod.Invoke(wsListInstance, new object[] { m_server });
 
             var helperType =  typeof(ControlWorkspaceSettings).Assembly.GetType("Microsoft.TeamFoundation.VersionControl.Controls.ClientHelper", false);
             if (helperType == null)
@@ -87,7 +87,7 @@ namespace TFV
                 return;
 
             var instance = constructor.Invoke(new object[]{});
-            method.Invoke(instance, new object[] { server, this });
+            method.Invoke(instance, new object[] { m_server, this });
 
 			setServerMethod.Invoke(wsListInstance, new object[] { null });
 
