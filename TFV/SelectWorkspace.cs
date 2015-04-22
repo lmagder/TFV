@@ -38,7 +38,6 @@ namespace TFV
                 if (w.Name == curName)
                     temp.Selected = true;
             }
-            listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             if (listView1.Items.Count > 0 && listView1.SelectedItems.Count == 0)
                 listView1.Items[0].Selected = true;
 
@@ -60,6 +59,21 @@ namespace TFV
 
         private void btnManage_Click(object sender, EventArgs e)
         {
+			var wsListType = typeof(ControlWorkspaceSettings).Assembly.GetType("Microsoft.TeamFoundation.VersionControl.Controls.WorkspaceList", false);
+			if (wsListType == null)
+				return;
+
+			var instanceProp = wsListType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+			if (instanceProp == null)
+				return;
+
+			var setServerMethod = wsListType.GetMethod("SetServer");
+			if (setServerMethod == null)
+				return;
+			
+			var wsListInstance = instanceProp.GetValue(null);
+			setServerMethod.Invoke(wsListInstance, new object[] { server });
+
             var helperType =  typeof(ControlWorkspaceSettings).Assembly.GetType("Microsoft.TeamFoundation.VersionControl.Controls.ClientHelper", false);
             if (helperType == null)
                 return;
@@ -74,6 +88,9 @@ namespace TFV
 
             var instance = constructor.Invoke(new object[]{});
             method.Invoke(instance, new object[] { server, this });
+
+			setServerMethod.Invoke(wsListInstance, new object[] { null });
+
             Populate(null);
         }
 

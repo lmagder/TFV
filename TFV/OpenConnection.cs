@@ -60,7 +60,8 @@ namespace TFV
             cbNTLM.Checked = connection.UserName == null;
             tbUser.Text = connection.UserName != null ? connection.UserName : "";
             tbPassword.Text = "";
-            tbServer.Text = connection.ProjectURL.ToString();
+            tbServer.Text = connection.ProjectURL;
+			tbWorkspace.Text = connection.Workspace;
         }
 
         private void OpenConnection_Load(object sender, EventArgs e)
@@ -133,7 +134,7 @@ namespace TFV
                     SavedConnection sc = null;
                     foreach(var l in list)
                     {
-                        if (l.ProjectURL == prj.Uri)
+                        if (new Uri(l.ProjectURL) == prj.Uri)
                         {
                             sc = l;
                             break;
@@ -146,7 +147,7 @@ namespace TFV
                         list.Add(sc);
                     }
 
-                    sc.ProjectURL = prj.Uri;
+                    sc.ProjectURL = prj.Uri.ToString();
                     sc.Workspace = ws.Name;
                     sc.UserName = cbNTLM.Checked ? null : tbUser.Text;
                     this.DialogResult = System.Windows.Forms.DialogResult.OK;

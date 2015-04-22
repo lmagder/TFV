@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
+using System.Xml.Serialization;
 
 namespace TFV
 {
@@ -19,8 +20,9 @@ namespace TFV
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Settings = Properties.Settings.Default;
+			Settings.Reload();
             Application.Run(new OpenConnection());
-            Settings.Save();
+			Settings.Save();
         }
 
         public static TFV.Properties.Settings Settings { get; private set; }

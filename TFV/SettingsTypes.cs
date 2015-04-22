@@ -3,13 +3,15 @@ using System.Net;
 using System.Collections.Generic;
 using Microsoft.TeamFoundation.Client;
 using System.Runtime.Serialization;
+using System.Configuration;
+using System.Xml.Serialization;
 
 namespace TFV
 {
-    [Serializable]
+	[Serializable]
     public class SavedConnection
     {
-        public Uri ProjectURL { get; set; }
+        public string ProjectURL { get; set; }
         public string UserName { get; set; }
         public string Workspace { get; set; }
         public SavedConnection()
@@ -21,12 +23,12 @@ namespace TFV
         public override string ToString()
         {
             if (ProjectURL != null)
-                return ProjectURL.ToString();
+                return ProjectURL + " (" + Workspace + ")";
             return "<null>";
         }
     }
 
-    [Serializable]
+	[Serializable]
     public class SavedConnectionList
     {
         public List<SavedConnection> Connections { get; set; }
