@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using System.Runtime.InteropServices;
+using Microsoft.TeamFoundation.Client;
 
 namespace TFV
 {
@@ -20,7 +21,7 @@ namespace TFV
             Process_Per_Monitor_DPI_Aware = 2
         }
         [DllImport("user32.dll", PreserveSig = false, ExactSpelling = true, EntryPoint="SetProcessDpiAwarenessInternal")] //This is a #define in Windows.h
-        public static extern bool SetProcessDPIAwareness(PROCESS_DPI_AWARENESS awareness);
+        public static extern void SetProcessDPIAwareness(PROCESS_DPI_AWARENESS awareness);
 
         [DllImport("user32.dll", SetLastError = true, ExactSpelling = true)]
         public static extern bool SetProcessDPIAware();
@@ -54,12 +55,18 @@ namespace TFV
             if (Settings.SavedConnnections == null)
                 Settings.SavedConnnections = new SavedConnectionList();
 
+            NotificationManager.Initialize();
+
             if (!OpenConnection(null))
                 return;
 
             Application.Run();
+            NotificationManager.Shutdown();
+            Settings.Save();
             return;
         }
+
+        static void NotificationHandler(Notification notification, IntPtr param1, IntPtr param2);
 
         public static bool OpenConnection(IWin32Window owner)
         {

@@ -38,9 +38,8 @@
             this.menuAbout = new System.Windows.Forms.MenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tvServer = new System.Windows.Forms.TreeView();
+            this.tcTrees = new System.Windows.Forms.TabControl();
+            this.tbServer = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tvWorkspace = new System.Windows.Forms.TreeView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
@@ -50,7 +49,7 @@
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.statusBar = new System.Windows.Forms.StatusBar();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cbAddress = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             menuItem1 = new System.Windows.Forms.MenuItem();
@@ -64,8 +63,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.tcTrees.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -136,7 +134,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.tabControl1);
+            this.splitContainer2.Panel1.Controls.Add(this.tcTrees);
             // 
             // splitContainer2.Panel2
             // 
@@ -145,35 +143,26 @@
             this.splitContainer2.SplitterDistance = 296;
             this.splitContainer2.TabIndex = 0;
             // 
-            // tabControl1
+            // tcTrees
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(296, 290);
-            this.tabControl1.TabIndex = 0;
+            this.tcTrees.Controls.Add(this.tbServer);
+            this.tcTrees.Controls.Add(this.tabPage2);
+            this.tcTrees.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tcTrees.Location = new System.Drawing.Point(0, 0);
+            this.tcTrees.Name = "tcTrees";
+            this.tcTrees.SelectedIndex = 0;
+            this.tcTrees.Size = new System.Drawing.Size(296, 290);
+            this.tcTrees.TabIndex = 0;
             // 
-            // tabPage1
+            // tbServer
             // 
-            this.tabPage1.Controls.Add(this.tvServer);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(288, 264);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Server";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tvServer
-            // 
-            this.tvServer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvServer.Location = new System.Drawing.Point(3, 3);
-            this.tvServer.Name = "tvServer";
-            this.tvServer.Size = new System.Drawing.Size(282, 258);
-            this.tvServer.TabIndex = 0;
+            this.tbServer.Location = new System.Drawing.Point(4, 22);
+            this.tbServer.Name = "tbServer";
+            this.tbServer.Padding = new System.Windows.Forms.Padding(3);
+            this.tbServer.Size = new System.Drawing.Size(288, 264);
+            this.tbServer.TabIndex = 0;
+            this.tbServer.Text = "Server";
+            this.tbServer.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -256,15 +245,18 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "arrow_Down_16xSM.png");
             // 
-            // comboBox1
+            // cbAddress
             // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(5, 5);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(852, 21);
-            this.comboBox1.TabIndex = 0;
+            this.cbAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbAddress.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cbAddress.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbAddress.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cbAddress.FormattingEnabled = true;
+            this.cbAddress.Location = new System.Drawing.Point(5, 5);
+            this.cbAddress.Name = "cbAddress";
+            this.cbAddress.Size = new System.Drawing.Size(852, 21);
+            this.cbAddress.TabIndex = 0;
+            this.cbAddress.Validating += new System.ComponentModel.CancelEventHandler(this.cbAddress_Validating);
             // 
             // tableLayoutPanel1
             // 
@@ -274,7 +266,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.button1, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.comboBox1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.cbAddress, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -317,8 +309,7 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
+            this.tcTrees.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -331,8 +322,8 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabControl tcTrees;
+        private System.Windows.Forms.TabPage tbServer;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage3;
@@ -344,10 +335,9 @@
         private System.Windows.Forms.StatusBar statusBar;
         private System.Windows.Forms.MenuItem menuAbout;
         private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cbAddress;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TreeView tvServer;
         private System.Windows.Forms.TreeView tvWorkspace;
     }
 }
