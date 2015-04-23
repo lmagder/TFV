@@ -33,26 +33,26 @@
             System.Windows.Forms.MenuItem menuItem3;
             System.Windows.Forms.MenuItem menuItem2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.menuOpenConnection = new System.Windows.Forms.MenuItem();
+            this.menuExit = new System.Windows.Forms.MenuItem();
+            this.menuAbout = new System.Windows.Forms.MenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tvServer = new System.Windows.Forms.TreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tvWorkspace = new System.Windows.Forms.TreeView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
-            this.menuOpenConnection = new System.Windows.Forms.MenuItem();
-            this.menuExit = new System.Windows.Forms.MenuItem();
             this.statusBar = new System.Windows.Forms.StatusBar();
-            this.menuAbout = new System.Windows.Forms.MenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
-            this.tvServer = new System.Windows.Forms.TreeView();
-            this.tvWorkspace = new System.Windows.Forms.TreeView();
             menuItem1 = new System.Windows.Forms.MenuItem();
             menuItem3 = new System.Windows.Forms.MenuItem();
             menuItem2 = new System.Windows.Forms.MenuItem();
@@ -70,6 +70,45 @@
             this.tabControl2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // menuItem1
+            // 
+            menuItem1.Index = 0;
+            menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuOpenConnection,
+            menuItem3,
+            this.menuExit});
+            menuItem1.Text = "&File";
+            // 
+            // menuOpenConnection
+            // 
+            this.menuOpenConnection.Index = 0;
+            this.menuOpenConnection.Text = "&Open Connection...";
+            this.menuOpenConnection.Click += new System.EventHandler(this.menuOpenConnection_Click);
+            // 
+            // menuItem3
+            // 
+            menuItem3.Index = 1;
+            menuItem3.Text = "-";
+            // 
+            // menuExit
+            // 
+            this.menuExit.Index = 2;
+            this.menuExit.Text = "E&xit";
+            this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
+            // 
+            // menuItem2
+            // 
+            menuItem2.Index = 1;
+            menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuAbout});
+            menuItem2.Text = "&Help";
+            // 
+            // menuAbout
+            // 
+            this.menuAbout.Index = 0;
+            this.menuAbout.Text = "&About";
+            this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
             // 
             // splitContainer1
             // 
@@ -128,6 +167,14 @@
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // tvServer
+            // 
+            this.tvServer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvServer.Location = new System.Drawing.Point(3, 3);
+            this.tvServer.Name = "tvServer";
+            this.tvServer.Size = new System.Drawing.Size(282, 258);
+            this.tvServer.TabIndex = 0;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.tvWorkspace);
@@ -138,6 +185,14 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Workspace";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tvWorkspace
+            // 
+            this.tvWorkspace.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvWorkspace.Location = new System.Drawing.Point(3, 3);
+            this.tvWorkspace.Name = "tvWorkspace";
+            this.tvWorkspace.Size = new System.Drawing.Size(282, 258);
+            this.tvWorkspace.TabIndex = 1;
             // 
             // tabControl2
             // 
@@ -165,7 +220,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(580, 288);
+            this.tabPage4.Size = new System.Drawing.Size(580, 264);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -188,51 +243,12 @@
             menuItem1,
             menuItem2});
             // 
-            // menuItem1
-            // 
-            menuItem1.Index = 0;
-            menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuOpenConnection,
-            menuItem3,
-            this.menuExit});
-            menuItem1.Text = "&File";
-            // 
-            // menuOpenConnection
-            // 
-            this.menuOpenConnection.Index = 0;
-            this.menuOpenConnection.Text = "&Open Connection...";
-            this.menuOpenConnection.Click += new System.EventHandler(this.menuOpenConnection_Click);
-            // 
-            // menuItem3
-            // 
-            menuItem3.Index = 1;
-            menuItem3.Text = "-";
-            // 
-            // menuExit
-            // 
-            this.menuExit.Index = 2;
-            this.menuExit.Text = "E&xit";
-            this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
-            // 
             // statusBar
             // 
             this.statusBar.Location = new System.Drawing.Point(0, 414);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(888, 22);
             this.statusBar.TabIndex = 0;
-            // 
-            // menuItem2
-            // 
-            menuItem2.Index = 1;
-            menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuAbout});
-            menuItem2.Text = "&Help";
-            // 
-            // menuAbout
-            // 
-            this.menuAbout.Index = 0;
-            this.menuAbout.Text = "&About";
-            this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
             // 
             // imageList1
             // 
@@ -278,22 +294,6 @@
             this.button1.Size = new System.Drawing.Size(22, 25);
             this.button1.TabIndex = 0;
             this.button1.UseVisualStyleBackColor = true;
-            // 
-            // tvServer
-            // 
-            this.tvServer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvServer.Location = new System.Drawing.Point(3, 3);
-            this.tvServer.Name = "tvServer";
-            this.tvServer.Size = new System.Drawing.Size(282, 258);
-            this.tvServer.TabIndex = 0;
-            // 
-            // tvWorkspace
-            // 
-            this.tvWorkspace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvWorkspace.Location = new System.Drawing.Point(3, 3);
-            this.tvWorkspace.Name = "tvWorkspace";
-            this.tvWorkspace.Size = new System.Drawing.Size(282, 258);
-            this.tvWorkspace.TabIndex = 1;
             // 
             // MainForm
             // 
