@@ -66,8 +66,7 @@ namespace TFV
             return;
         }
 
-        static void NotificationHandler(Notification notification, IntPtr param1, IntPtr param2);
-
+   
         public static bool OpenConnection(IWin32Window owner)
         {
             TfsTeamProjectCollection projectCollection = null;
