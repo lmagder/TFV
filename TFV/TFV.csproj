@@ -148,6 +148,12 @@
     <Compile Include="SelectWorkspace.Designer.cs">
       <DependentUpon>SelectWorkspace.cs</DependentUpon>
     </Compile>
+    <Compile Include="ServerTreeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerTreeView.Designer.cs">
+      <DependentUpon>ServerTreeView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsTypes.cs" />
     <EmbeddedResource Include="AboutBox.resx">
@@ -167,9 +173,13 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="SelectWorkspace.resx">
       <DependentUpon>SelectWorkspace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerTreeView.resx">
+      <DependentUpon>ServerTreeView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="DPIAware.manifest" />
     <None Include="Properties\Settings.settings">
@@ -204,6 +214,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\TreeViewIcons.png" />
+    <None Include="Resources\TreeViewStateIcons.png" />
     <Content Include="TFSServer_13310.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

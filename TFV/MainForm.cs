@@ -23,7 +23,7 @@ namespace TFV
         Workspace m_workspace;
         TfsTeamProjectCollection m_projectCollection;
         VersionControlServer m_vcServer;
-        TreeViewServerFolder m_serverTreeView;
+        ServerTreeView m_serverTreeView;
 
         static int s_instanceCount = 0;
         public MainForm(TfsTeamProjectCollection pc, Workspace ws)
@@ -35,10 +35,10 @@ namespace TFV
             m_vcServer = m_projectCollection.GetService<VersionControlServer>();
             Text = "TFV - " + m_projectCollection.ToString();
 
-            m_serverTreeView = new TreeViewServerFolder();
+            m_serverTreeView = new ServerTreeView();
             tbServer.Controls.Add(m_serverTreeView);
             m_serverTreeView.Dock = DockStyle.Fill;
-            m_serverTreeView.DataSource = new SimpleTreeViewServerFolderDataSource(m_vcServer);
+            m_serverTreeView.SourceControl = m_vcServer;
 
             m_serverTreeView.CurrentServerItemChanged += m_serverTreeView_CurrentServerItemChanged;
 

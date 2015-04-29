@@ -8,7 +8,6 @@ using System.Xml.Serialization;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using System.Runtime.InteropServices;
-using Microsoft.TeamFoundation.Client;
 
 namespace TFV
 {
