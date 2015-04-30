@@ -25,33 +25,6 @@ namespace TFV
         TfsTeamProjectCollection m_projectCollection;
         VersionControlServer m_vcServer;
 
-        private void UpdateLimitViewToWorkspace()
-        {
-            if (Program.Settings.LimitViewToWorkspace)
-            {
-                stvServerTreeView.VersionSpec = new WorkspaceVersionSpec(m_workspace);
-                menuInWorkspace.Checked = true;
-            }
-            else
-            {
-                stvServerTreeView.VersionSpec = VersionSpec.Latest;
-                menuInWorkspace.Checked = false;
-            }
-        }
-
-        private void UpdateShowDeleted()
-        {
-            if (Program.Settings.ShowDeletedFiles)
-            {
-                stvServerTreeView.DeletedState = DeletedState.Any;
-                menuShowDeleted.Checked = true;
-            }
-            else
-            {
-                stvServerTreeView.DeletedState = DeletedState.NonDeleted;
-                menuShowDeleted.Checked = false;
-            }
-        }
 
         static int s_instanceCount = 0;
         public MainForm(TfsTeamProjectCollection pc, Workspace ws)
@@ -68,6 +41,10 @@ namespace TFV
             UpdateShowDeleted();
 
             stvServerTreeView.CurrentServerItemChanged += stvServerTreeView_CurrentServerItemChanged;
+            stvServerTreeView.BackgroundWorkStarted += delegate(object o, EventArgs e) { StartWaiting(); };
+            stvServerTreeView.BackgroundWorkEnded += delegate(object o, EventArgs e) { StopWaiting(); };
+
+            cbAddress.Text = stvServerTreeView.CurrentServerItem;
 
             m_vcServer.UpdatedWorkspace += m_vcServer_UpdatedWorkspace;
             m_vcServer.FolderContentChanged += m_vcServer_FolderContentChanged;
@@ -150,7 +127,84 @@ namespace TFV
             SelectWorkspace.ShowWorkspaceDialog(m_vcServer, this);
         }
 
+        private void UpdateLimitViewToWorkspace()
+        {
+            if (Program.Settings.LimitViewToWorkspace)
+            {
+                stvServerTreeView.VersionSpec = new WorkspaceVersionSpec(m_workspace);
+                menuInWorkspace.Checked = true;
+            }
+            else
+            {
+                stvServerTreeView.VersionSpec = VersionSpec.Latest;
+                menuInWorkspace.Checked = false;
+            }
+        }
+
+        private void UpdateShowDeleted()
+        {
+            if (Program.Settings.ShowDeletedFiles)
+            {
+                stvServerTreeView.DeletedState = DeletedState.Any;
+                menuShowDeleted.Checked = true;
+            }
+            else
+            {
+                stvServerTreeView.DeletedState = DeletedState.NonDeleted;
+                menuShowDeleted.Checked = false;
+            }
+        }
+
+        private int m_waitingCount = 0;
+
+        public void StartWaiting()
+        {
+            m_waitingCount++;
+            if (m_waitingCount > 0)
+                statusBarProgress.Visible = true;
+        }
  
+        public void StopWaiting()
+        {
+            m_waitingCount--;
+            if (m_waitingCount <= 0)
+                statusBarProgress.Visible = false;
+        }
+
+        private void cbAddress_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (tcTrees.SelectedTab == tbServer)
+            {
+                if (VersionControlPath.IsValidPath(cbAddress.Text))
+                    stvServerTreeView.Navigate(cbAddress.Text);
+            }
+        }
+
+
+        private void cbAddress_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                e.Handled = true;
+        }
+
+        private void cbAddress_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                if (tcTrees.SelectedTab == tbServer)
+                {
+                    if (VersionControlPath.IsValidPath(cbAddress.Text))
+                    {
+                        stvServerTreeView.Navigate(cbAddress.Text);
+                        cbAddress.Items.Add(cbAddress.Text);
+                    }
+                }
+            }
+        }
+
+ 
+
 
     }
 }

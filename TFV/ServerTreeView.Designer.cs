@@ -31,14 +31,15 @@
         {
             this.components = new System.ComponentModel.Container();
             this.treeView = new System.Windows.Forms.TreeView();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.imageListIcons = new System.Windows.Forms.ImageList(this.components);
             this.imageListOverlays = new System.Windows.Forms.ImageList(this.components);
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // treeView
             // 
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView.HideSelection = false;
             this.treeView.ImageIndex = 0;
             this.treeView.ImageList = this.imageListIcons;
             this.treeView.Location = new System.Drawing.Point(0, 0);
@@ -53,12 +54,6 @@
             this.treeView.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterExpand);
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
             // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
             // imageListIcons
             // 
             this.imageListIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -70,6 +65,12 @@
             this.imageListOverlays.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.imageListOverlays.ImageSize = new System.Drawing.Size(16, 16);
             this.imageListOverlays.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.WorkerSupportsCancellation = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // ServerTreeView
             // 

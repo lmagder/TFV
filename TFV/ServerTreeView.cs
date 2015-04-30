@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 using Microsoft.TeamFoundation.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
@@ -16,8 +17,33 @@ namespace TFV
 {
     public partial class ServerTreeView : UserControl
     {
-        
+        public ServerTreeView()
+        {
+            InitializeComponent();
 
+            int curStyle = NativeMethods.SendMessage(treeView.Handle, NativeMethods.TVM_GETEXTENDEDSTYLE, 0, 0);
+            NativeMethods.SendMessage(treeView.Handle, NativeMethods.TVM_SETEXTENDEDSTYLE, NativeMethods.TVS_EX_FADEINOUTEXPANDOS, NativeMethods.TVS_EX_FADEINOUTEXPANDOS);
+
+            NativeMethods.SetWindowTheme(treeView.Handle, "Explorer", null);
+
+            imageListIcons.Images.AddStrip(TFV.Properties.Resources.TreeViewIcons);
+            imageListOverlays.Images.AddStrip(TFV.Properties.Resources.TreeViewStateIcons);
+        }
+
+
+        internal class NativeMethods
+        {
+            public const int TV_FIRST = 0x1100;
+            public const int TVM_SETEXTENDEDSTYLE = TV_FIRST + 44;
+            public const int TVM_GETEXTENDEDSTYLE = TV_FIRST + 45;
+            public const int TVS_EX_FADEINOUTEXPANDOS = 0x0040;
+
+            [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+            internal static extern int SendMessage(IntPtr hWnd, UInt32 Msg, int wParam, int lParam);
+
+            [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
+            public extern static int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+        }
         private VersionControlServer m_sourceControl;
         private VersionSpec m_versionSpec = VersionSpec.Latest;
 		private DeletedState m_deletedState;
@@ -86,7 +112,11 @@ namespace TFV
 
         private List<string> m_toExpand = new List<string>();
 		private string m_currentPath, m_navigateToWhenLoaded;
-		public event EventHandler CurrentServerItemChanged;
+		
+        public event EventHandler CurrentServerItemChanged;
+        public event EventHandler BackgroundWorkStarted;
+        public event EventHandler BackgroundWorkEnded;
+
 		public string CurrentServerItem
 		{
 			get
@@ -105,6 +135,15 @@ namespace TFV
 			if (initialPath != null && initialPath.StartsWith("$/") && initialPath.Length > 2)
 			{
 				initialPath = VersionControlPath.GetFullPath(initialPath);
+
+                TreeNodeServerItem foundItem = null;
+                if (TryFindNodeByServerItem(initialPath, null, out foundItem))
+                {
+                    treeView.SelectedNode = foundItem;
+                    m_navigateToWhenLoaded = null;
+                    return;
+                }
+
 				List<string> list = new List<string>();
 				string folderName = VersionControlPath.GetFolderName(initialPath);
 				while (!VersionControlPath.Equals(folderName, "$/"))
@@ -203,6 +242,9 @@ namespace TFV
 		{
 			if (this.m_toExpand.Count > 0 && !backgroundWorker.IsBusy)
 			{
+                if (BackgroundWorkStarted != null)
+                    BackgroundWorkStarted(this, EventArgs.Empty);
+
                 backgroundWorker.RunWorkerAsync(m_toExpand.ToArray());
 				m_toExpand.Clear();
 			}
@@ -313,13 +355,7 @@ namespace TFV
             }
         }
 
-        public ServerTreeView()
-        {
-            InitializeComponent();
-            imageListIcons.Images.AddStrip(TFV.Properties.Resources.TreeViewIcons);
-            imageListOverlays.Images.AddStrip(TFV.Properties.Resources.TreeViewStateIcons);
-        }
-
+ 
         class TempItemSet
         {
             public string QueryPath;
@@ -381,6 +417,9 @@ namespace TFV
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (BackgroundWorkEnded != null)
+                BackgroundWorkEnded(this, EventArgs.Empty);
+
             if (e.Cancelled)
                 return;
 

@@ -40,6 +40,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tcTrees = new System.Windows.Forms.TabControl();
             this.tbServer = new System.Windows.Forms.TabPage();
+            this.stvServerTreeView = new TFV.ServerTreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tvWorkspace = new System.Windows.Forms.TreeView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
@@ -48,16 +49,15 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuWorkspaces = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuShowDeleted = new System.Windows.Forms.MenuItem();
             this.menuInWorkspace = new System.Windows.Forms.MenuItem();
-            this.statusBar = new System.Windows.Forms.StatusBar();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.cbAddress = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
-            this.menuWorkspaces = new System.Windows.Forms.MenuItem();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.stvServerTreeView = new TFV.ServerTreeView();
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.statusBarProgress = new System.Windows.Forms.ToolStripProgressBar();
             menuItem1 = new System.Windows.Forms.MenuItem();
             menuItem3 = new System.Windows.Forms.MenuItem();
             menuItem2 = new System.Windows.Forms.MenuItem();
@@ -74,6 +74,7 @@
             this.tabPage2.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuItem1
@@ -129,8 +130,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(888, 403);
-            this.splitContainer1.SplitterDistance = 303;
+            this.splitContainer1.Size = new System.Drawing.Size(888, 414);
+            this.splitContainer1.SplitterDistance = 308;
             this.splitContainer1.TabIndex = 2;
             // 
             // splitContainer2
@@ -146,7 +147,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tabControl2);
-            this.splitContainer2.Size = new System.Drawing.Size(888, 303);
+            this.splitContainer2.Size = new System.Drawing.Size(888, 308);
             this.splitContainer2.SplitterDistance = 296;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -158,7 +159,7 @@
             this.tcTrees.Location = new System.Drawing.Point(0, 0);
             this.tcTrees.Name = "tcTrees";
             this.tcTrees.SelectedIndex = 0;
-            this.tcTrees.Size = new System.Drawing.Size(296, 303);
+            this.tcTrees.Size = new System.Drawing.Size(296, 308);
             this.tcTrees.TabIndex = 0;
             // 
             // tbServer
@@ -167,10 +168,22 @@
             this.tbServer.Location = new System.Drawing.Point(4, 22);
             this.tbServer.Name = "tbServer";
             this.tbServer.Padding = new System.Windows.Forms.Padding(3);
-            this.tbServer.Size = new System.Drawing.Size(288, 277);
+            this.tbServer.Size = new System.Drawing.Size(288, 282);
             this.tbServer.TabIndex = 0;
             this.tbServer.Text = "Server";
             this.tbServer.UseVisualStyleBackColor = true;
+            // 
+            // stvServerTreeView
+            // 
+            this.stvServerTreeView.CurrentServerItem = "";
+            this.stvServerTreeView.DeletedState = Microsoft.TeamFoundation.VersionControl.Client.DeletedState.NonDeleted;
+            this.stvServerTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stvServerTreeView.Location = new System.Drawing.Point(3, 3);
+            this.stvServerTreeView.Name = "stvServerTreeView";
+            this.stvServerTreeView.ShowFiles = true;
+            this.stvServerTreeView.Size = new System.Drawing.Size(282, 276);
+            this.stvServerTreeView.SourceControl = null;
+            this.stvServerTreeView.TabIndex = 0;
             // 
             // tabPage2
             // 
@@ -178,7 +191,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(288, 88);
+            this.tabPage2.Size = new System.Drawing.Size(288, 71);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Workspace";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -188,7 +201,7 @@
             this.tvWorkspace.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvWorkspace.Location = new System.Drawing.Point(3, 3);
             this.tvWorkspace.Name = "tvWorkspace";
-            this.tvWorkspace.Size = new System.Drawing.Size(282, 82);
+            this.tvWorkspace.Size = new System.Drawing.Size(282, 65);
             this.tvWorkspace.TabIndex = 1;
             // 
             // tabControl2
@@ -199,7 +212,7 @@
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(588, 303);
+            this.tabControl2.Size = new System.Drawing.Size(588, 308);
             this.tabControl2.TabIndex = 0;
             // 
             // tabPage3
@@ -207,7 +220,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(580, 277);
+            this.tabPage3.Size = new System.Drawing.Size(580, 282);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -217,7 +230,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(580, 88);
+            this.tabPage4.Size = new System.Drawing.Size(580, 71);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -230,7 +243,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(888, 96);
+            this.textBox1.Size = new System.Drawing.Size(888, 102);
             this.textBox1.TabIndex = 0;
             this.textBox1.WordWrap = false;
             // 
@@ -251,6 +264,17 @@
             this.menuInWorkspace});
             this.menuItem4.Text = "&View";
             // 
+            // menuWorkspaces
+            // 
+            this.menuWorkspaces.Index = 0;
+            this.menuWorkspaces.Text = "Manage &Workspaces...";
+            this.menuWorkspaces.Click += new System.EventHandler(this.menuWorkspaces_Click);
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 1;
+            this.menuItem6.Text = "-";
+            // 
             // menuShowDeleted
             // 
             this.menuShowDeleted.Index = 2;
@@ -264,30 +288,19 @@
             this.menuInWorkspace.Text = "&Limit View to Items in Workspace";
             this.menuInWorkspace.Click += new System.EventHandler(this.menuInWorkspace_Click);
             // 
-            // statusBar
-            // 
-            this.statusBar.Location = new System.Drawing.Point(0, 434);
-            this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(888, 22);
-            this.statusBar.TabIndex = 0;
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "arrow_Down_16xSM.png");
-            // 
             // cbAddress
             // 
             this.cbAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cbAddress.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cbAddress.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbAddress.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cbAddress.FormattingEnabled = true;
             this.cbAddress.Location = new System.Drawing.Point(5, 5);
             this.cbAddress.Name = "cbAddress";
             this.cbAddress.Size = new System.Drawing.Size(852, 21);
             this.cbAddress.TabIndex = 0;
+            this.cbAddress.SelectionChangeCommitted += new System.EventHandler(this.cbAddress_SelectionChangeCommitted);
+            this.cbAddress.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbAddress_KeyDown);
+            this.cbAddress.KeyUp += new System.Windows.Forms.KeyEventHandler(this.cbAddress_KeyUp);
             this.cbAddress.Validating += new System.ComponentModel.CancelEventHandler(this.cbAddress_Validating);
             // 
             // tableLayoutPanel1
@@ -319,34 +332,34 @@
             this.button1.TabIndex = 0;
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // menuWorkspaces
+            // statusBar
             // 
-            this.menuWorkspaces.Index = 0;
-            this.menuWorkspaces.Text = "Manage &Workspaces...";
-            this.menuWorkspaces.Click += new System.EventHandler(this.menuWorkspaces_Click);
+            this.statusBar.GripMargin = new System.Windows.Forms.Padding(0);
+            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusBarProgress});
+            this.statusBar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.statusBar.Location = new System.Drawing.Point(0, 445);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(888, 22);
+            this.statusBar.TabIndex = 3;
+            this.statusBar.Text = "statusStrip1";
             // 
-            // menuItem6
+            // statusBarProgress
             // 
-            this.menuItem6.Index = 1;
-            this.menuItem6.Text = "-";
-            // 
-            // stvServerTreeView
-            // 
-            this.stvServerTreeView.CurrentServerItem = "";
-            this.stvServerTreeView.DeletedState = Microsoft.TeamFoundation.VersionControl.Client.DeletedState.NonDeleted;
-            this.stvServerTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stvServerTreeView.Location = new System.Drawing.Point(3, 3);
-            this.stvServerTreeView.Name = "stvServerTreeView";
-            this.stvServerTreeView.ShowFiles = true;
-            this.stvServerTreeView.Size = new System.Drawing.Size(282, 271);
-            this.stvServerTreeView.SourceControl = null;
-            this.stvServerTreeView.TabIndex = 0;
+            this.statusBarProgress.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.statusBarProgress.MarqueeAnimationSpeed = 50;
+            this.statusBarProgress.Name = "statusBarProgress";
+            this.statusBarProgress.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.statusBarProgress.Size = new System.Drawing.Size(100, 16);
+            this.statusBarProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.statusBarProgress.Value = 50;
+            this.statusBarProgress.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(888, 456);
+            this.ClientSize = new System.Drawing.Size(888, 467);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.statusBar);
@@ -369,6 +382,8 @@
             this.tabPage2.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -388,9 +403,7 @@
         private System.Windows.Forms.MainMenu mainMenu;
         private System.Windows.Forms.MenuItem menuOpenConnection;
         private System.Windows.Forms.MenuItem menuExit;
-        private System.Windows.Forms.StatusBar statusBar;
         private System.Windows.Forms.MenuItem menuAbout;
-        private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ComboBox cbAddress;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button button1;
@@ -401,6 +414,8 @@
         private System.Windows.Forms.MenuItem menuInWorkspace;
         private System.Windows.Forms.MenuItem menuWorkspaces;
         private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.StatusStrip statusBar;
+        private System.Windows.Forms.ToolStripProgressBar statusBarProgress;
     }
 }
 
