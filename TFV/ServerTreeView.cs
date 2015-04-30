@@ -320,6 +320,12 @@ namespace TFV
             imageListOverlays.Images.AddStrip(TFV.Properties.Resources.TreeViewStateIcons);
         }
 
+        class TempItemSet
+        {
+            public string QueryPath;
+            public Item[] Items;
+        }
+
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             if (e.Cancel)
@@ -332,7 +338,45 @@ namespace TFV
                 array[i] = new ItemSpec(VersionControlPath.Combine(queryItems[i], "*"), RecursionType.OneLevel);
             }
             ItemSet[] itemSets = m_sourceControl.GetItems(array, this.m_versionSpec, this.m_deletedState, ShowFiles ? ItemType.Any : ItemType.Folder, GetItemsOptions.IncludeBranchInfo);
-            e.Result = itemSets;
+            TempItemSet[] result = new TempItemSet[itemSets.Length];
+            for (int i = 0; i < itemSets.Length; i++)
+                result[i] = new TempItemSet{ QueryPath = itemSets[i].QueryPath, Items = itemSets[i].Items};
+
+            if (m_versionSpec is WorkspaceVersionSpec)
+            {
+                WorkspaceVersionSpec wsvs = m_versionSpec as WorkspaceVersionSpec;
+                Workspace ws = m_sourceControl.GetWorkspace(wsvs.Name, wsvs.OwnerName);
+                ws.RefreshIfNeeded();
+                var folders = ws.Folders;
+                foreach (TempItemSet its in result)
+                {
+                    int desiredCloakDepth = VersionControlPath.GetFolderDepth(its.QueryPath) + 1;
+                    string cloakedWeSaw = null;
+                    List<Item> newItems = new List<Item>();
+                    foreach (var fldr in folders)
+                    {
+                        if (fldr.IsCloaked &&  fldr.Depth != RecursionType.None && VersionControlPath.IsSubItem(fldr.ServerItem, its.QueryPath) &&
+                            VersionControlPath.GetFolderDepth(fldr.ServerItem) == desiredCloakDepth)
+                        {
+                            cloakedWeSaw = fldr.ServerItem;
+                        }
+                        else if (!fldr.IsCloaked && cloakedWeSaw != null && VersionControlPath.IsSubItem(fldr.ServerItem, cloakedWeSaw))
+                        {
+                            //we need this to keep going even if it's cloaked
+                            newItems.Add(m_sourceControl.GetItem(cloakedWeSaw));
+                            cloakedWeSaw = null;
+                        }
+                    }
+                    if (newItems.Count > 0)
+                    {
+                        newItems.AddRange(its.Items);
+                        its.Items = newItems.ToArray();
+                        Array.Sort(its.Items, Item.Comparer);
+                       
+                    }
+                }
+            }
+            e.Result = result;
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -340,12 +384,12 @@ namespace TFV
             if (e.Cancelled)
                 return;
 
-            ItemSet[] itemSets = e.Result as ItemSet[];
+            TempItemSet[] itemSets = e.Result as TempItemSet[];
             if (itemSets != null)
             {
                 treeView.BeginUpdate();
                 TreeNodeServerItem treeNodeServerFolder = null;
-                foreach(ItemSet itemSet in itemSets)
+                foreach (TempItemSet itemSet in itemSets)
                 {
                     if (itemSet.QueryPath != null)
                     {

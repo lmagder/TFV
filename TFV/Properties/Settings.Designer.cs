@@ -45,5 +45,29 @@ namespace TFV.Properties {
                 this["ShowConnectionAtStartup"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowDeletedFiles {
+            get {
+                return ((bool)(this["ShowDeletedFiles"]));
+            }
+            set {
+                this["ShowDeletedFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LimitViewToWorkspace {
+            get {
+                return ((bool)(this["LimitViewToWorkspace"]));
+            }
+            set {
+                this["LimitViewToWorkspace"] = value;
+            }
+        }
     }
 }

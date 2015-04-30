@@ -18,12 +18,40 @@ using Microsoft.TeamFoundation;
 
 namespace TFV
 {
+
     public partial class MainForm : Form
     {
         Workspace m_workspace;
         TfsTeamProjectCollection m_projectCollection;
         VersionControlServer m_vcServer;
-        ServerTreeView m_serverTreeView;
+
+        private void UpdateLimitViewToWorkspace()
+        {
+            if (Program.Settings.LimitViewToWorkspace)
+            {
+                stvServerTreeView.VersionSpec = new WorkspaceVersionSpec(m_workspace);
+                menuInWorkspace.Checked = true;
+            }
+            else
+            {
+                stvServerTreeView.VersionSpec = VersionSpec.Latest;
+                menuInWorkspace.Checked = false;
+            }
+        }
+
+        private void UpdateShowDeleted()
+        {
+            if (Program.Settings.ShowDeletedFiles)
+            {
+                stvServerTreeView.DeletedState = DeletedState.Any;
+                menuShowDeleted.Checked = true;
+            }
+            else
+            {
+                stvServerTreeView.DeletedState = DeletedState.NonDeleted;
+                menuShowDeleted.Checked = false;
+            }
+        }
 
         static int s_instanceCount = 0;
         public MainForm(TfsTeamProjectCollection pc, Workspace ws)
@@ -35,17 +63,24 @@ namespace TFV
             m_vcServer = m_projectCollection.GetService<VersionControlServer>();
             Text = "TFV - " + m_projectCollection.ToString();
 
-            m_serverTreeView = new ServerTreeView();
-            tbServer.Controls.Add(m_serverTreeView);
-            m_serverTreeView.Dock = DockStyle.Fill;
-            m_serverTreeView.SourceControl = m_vcServer;
+            stvServerTreeView.SourceControl = m_vcServer;
+            UpdateLimitViewToWorkspace();
+            UpdateShowDeleted();
 
-            m_serverTreeView.CurrentServerItemChanged += m_serverTreeView_CurrentServerItemChanged;
+            stvServerTreeView.CurrentServerItemChanged += stvServerTreeView_CurrentServerItemChanged;
 
             m_vcServer.UpdatedWorkspace += m_vcServer_UpdatedWorkspace;
             m_vcServer.FolderContentChanged += m_vcServer_FolderContentChanged;
             m_vcServer.CommitCheckin += m_vcServer_CommitCheckin;
             s_instanceCount++;
+        }
+
+        void stvServerTreeView_CurrentServerItemChanged(object sender, EventArgs e)
+        {
+            if (tcTrees.SelectedTab == tbServer)
+            {
+                cbAddress.Text = stvServerTreeView.CurrentServerItem;
+            }
         }
 
         void m_vcServer_CommitCheckin(object sender, CommitCheckinEventArgs e)
@@ -63,13 +98,6 @@ namespace TFV
             
         }
 
-        void m_serverTreeView_CurrentServerItemChanged(object sender, EventArgs e)
-        {
-            if (tcTrees.SelectedTab == tbServer)
-            {
-                cbAddress.Text = m_serverTreeView.CurrentServerItem;
-            }
-        }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -103,6 +131,26 @@ namespace TFV
                     e.Cancel = true;
             }
         }
+
+        private void menuShowDeleted_Click(object sender, EventArgs e)
+        {
+            Program.Settings.ShowDeletedFiles = !Program.Settings.ShowDeletedFiles;
+            UpdateShowDeleted();
+                
+        }
+
+        private void menuInWorkspace_Click(object sender, EventArgs e)
+        {
+            Program.Settings.LimitViewToWorkspace = !Program.Settings.LimitViewToWorkspace;
+            UpdateLimitViewToWorkspace();
+        }
+
+        private void menuWorkspaces_Click(object sender, EventArgs e)
+        {
+            SelectWorkspace.ShowWorkspaceDialog(m_vcServer, this);
+        }
+
+ 
 
     }
 }

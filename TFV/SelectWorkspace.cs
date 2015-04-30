@@ -57,24 +57,24 @@ namespace TFV
             this.Close();
         }
 
-        private void btnManage_Click(object sender, EventArgs e)
+        public static void ShowWorkspaceDialog(VersionControlServer server, IWin32Window owner)
         {
-			var wsListType = typeof(ControlWorkspaceSettings).Assembly.GetType("Microsoft.TeamFoundation.VersionControl.Controls.WorkspaceList", false);
-			if (wsListType == null)
-				return;
+            var wsListType = typeof(ControlWorkspaceSettings).Assembly.GetType("Microsoft.TeamFoundation.VersionControl.Controls.WorkspaceList", false);
+            if (wsListType == null)
+                return;
 
-			var instanceProp = wsListType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-			if (instanceProp == null)
-				return;
+            var instanceProp = wsListType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            if (instanceProp == null)
+                return;
 
-			var setServerMethod = wsListType.GetMethod("SetServer");
-			if (setServerMethod == null)
-				return;
-			
-			var wsListInstance = instanceProp.GetValue(null);
-			setServerMethod.Invoke(wsListInstance, new object[] { m_server });
+            var setServerMethod = wsListType.GetMethod("SetServer");
+            if (setServerMethod == null)
+                return;
 
-            var helperType =  typeof(ControlWorkspaceSettings).Assembly.GetType("Microsoft.TeamFoundation.VersionControl.Controls.ClientHelper", false);
+            var wsListInstance = instanceProp.GetValue(null);
+            setServerMethod.Invoke(wsListInstance, new object[] { server });
+
+            var helperType = typeof(ControlWorkspaceSettings).Assembly.GetType("Microsoft.TeamFoundation.VersionControl.Controls.ClientHelper", false);
             if (helperType == null)
                 return;
 
@@ -86,11 +86,15 @@ namespace TFV
             if (constructor == null)
                 return;
 
-            var instance = constructor.Invoke(new object[]{});
-            method.Invoke(instance, new object[] { m_server, this });
+            var instance = constructor.Invoke(new object[] { });
+            method.Invoke(instance, new object[] { server, owner });
 
-			setServerMethod.Invoke(wsListInstance, new object[] { null });
+            setServerMethod.Invoke(wsListInstance, new object[] { null });
+        }
 
+        private void btnManage_Click(object sender, EventArgs e)
+        {
+            ShowWorkspaceDialog(m_server, this);
             Populate(null);
         }
 
