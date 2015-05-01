@@ -26,8 +26,16 @@ namespace TFV
 
             NativeMethods.SetWindowTheme(treeView.Handle, "Explorer", null);
 
-            imageListIcons.Images.AddStrip(TFV.Properties.Resources.TreeViewIcons);
-            imageListOverlays.Images.AddStrip(TFV.Properties.Resources.TreeViewStateIcons);
+            if (DpiHelper.IsScalingRequired)
+            {
+                imageListIcons.Images.AddStrip(DpiHelper.ScaleBitmapLogicalToDevice(TFV.Properties.Resources.TreeViewIcons));
+                imageListOverlays.Images.AddStrip(DpiHelper.ScaleBitmapLogicalToDevice(TFV.Properties.Resources.TreeViewStateIcons));
+            }
+            else
+            {
+                imageListIcons.Images.AddStrip(TFV.Properties.Resources.TreeViewIcons);
+                imageListOverlays.Images.AddStrip(TFV.Properties.Resources.TreeViewStateIcons);
+            }
         }
 
 

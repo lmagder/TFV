@@ -39,7 +39,8 @@ namespace TFV
         {
             if (Environment.OSVersion.Version >= Natives.Win81)
             {
-                Natives.SetProcessDPIAwareness(Natives.PROCESS_DPI_AWARENESS.Process_Per_Monitor_DPI_Aware);
+                //Windows forms in not per-monitor DPI aware
+                Natives.SetProcessDPIAwareness(Natives.PROCESS_DPI_AWARENESS.Process_System_DPI_Aware);
             }
             else if (Environment.OSVersion.Version >= Natives.WinVista)
             {
