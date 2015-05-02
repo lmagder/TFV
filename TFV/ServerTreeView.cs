@@ -21,10 +21,10 @@ namespace TFV
         {
             InitializeComponent();
 
-            int curStyle = NativeMethods.SendMessage(treeView.Handle, NativeMethods.TVM_GETEXTENDEDSTYLE, 0, 0);
-            //NativeMethods.SendMessage(treeView.Handle, NativeMethods.TVM_SETEXTENDEDSTYLE, NativeMethods.TVS_EX_FADEINOUTEXPANDOS, NativeMethods.TVS_EX_FADEINOUTEXPANDOS);
+            int styleFlags = NativeMethods.TVS_EX_FADEINOUTEXPANDOS | NativeMethods.TVS_EX_DOUBLEBUFFER;
+            NativeMethods.SendMessage(treeView.Handle, NativeMethods.TVM_SETEXTENDEDSTYLE, styleFlags, styleFlags);
 
-            //NativeMethods.SetWindowTheme(treeView.Handle, "Explorer", null);
+            NativeMethods.SetWindowTheme(treeView.Handle, "Explorer", null);
 
             if (DpiHelper.IsScalingRequired)
             {
@@ -45,6 +45,8 @@ namespace TFV
             public const int TVM_SETEXTENDEDSTYLE = TV_FIRST + 44;
             public const int TVM_GETEXTENDEDSTYLE = TV_FIRST + 45;
             public const int TVS_EX_FADEINOUTEXPANDOS = 0x0040;
+            public const int TVS_EX_DOUBLEBUFFER = 0x0004;
+            
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
             internal static extern int SendMessage(IntPtr hWnd, UInt32 Msg, int wParam, int lParam);
