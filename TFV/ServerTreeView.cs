@@ -28,6 +28,8 @@ namespace TFV
 
             if (DpiHelper.IsScalingRequired)
             {
+                imageListIcons.ImageSize = DpiHelper.LogicalToDeviceUnits(imageListIcons.ImageSize);
+                imageListOverlays.ImageSize = DpiHelper.LogicalToDeviceUnits(imageListOverlays.ImageSize);
                 imageListIcons.Images.AddStrip(DpiHelper.ScaleBitmapLogicalToDevice(TFV.Properties.Resources.TreeViewIcons));
                 imageListOverlays.Images.AddStrip(DpiHelper.ScaleBitmapLogicalToDevice(TFV.Properties.Resources.TreeViewStateIcons));
             }
