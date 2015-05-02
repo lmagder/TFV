@@ -22,9 +22,9 @@ namespace TFV
             InitializeComponent();
 
             int curStyle = NativeMethods.SendMessage(treeView.Handle, NativeMethods.TVM_GETEXTENDEDSTYLE, 0, 0);
-            NativeMethods.SendMessage(treeView.Handle, NativeMethods.TVM_SETEXTENDEDSTYLE, NativeMethods.TVS_EX_FADEINOUTEXPANDOS, NativeMethods.TVS_EX_FADEINOUTEXPANDOS);
+            //NativeMethods.SendMessage(treeView.Handle, NativeMethods.TVM_SETEXTENDEDSTYLE, NativeMethods.TVS_EX_FADEINOUTEXPANDOS, NativeMethods.TVS_EX_FADEINOUTEXPANDOS);
 
-            NativeMethods.SetWindowTheme(treeView.Handle, "Explorer", null);
+            //NativeMethods.SetWindowTheme(treeView.Handle, "Explorer", null);
 
             if (DpiHelper.IsScalingRequired)
             {
@@ -115,28 +115,66 @@ namespace TFV
 				this.CollapsedImageIndex = imageIndex;
 				this.ExpandedImageIndex = expandedImageIndex;
                 this.ItemID = serverItem != null ? serverItem.ItemId : 0;
+                this.IsMultiSelect = false;
 			}
+
+            public bool IsMultiSelect { get; private set; }
+            public void ColorSelected()
+            {
+                BackColor = SystemColors.Highlight;
+                ForeColor = SystemColors.HighlightText;
+                IsMultiSelect = true;
+            }
+
+            public void ColorUnselected()
+            {
+                BackColor = Color.Empty;
+                ForeColor = SystemColors.ControlText;
+                IsMultiSelect = false;
+            }
 		}
 
         private List<string> m_toExpand = new List<string>();
-		private string m_currentPath, m_navigateToWhenLoaded;
-		
-        public event EventHandler CurrentServerItemChanged;
+		private string m_lastSelectedPath, m_navigateToWhenLoaded;
+
+        private SortedDictionary<string, TreeNodeServerItem> m_selectedItems = new SortedDictionary<string, TreeNodeServerItem>();
+
+        public event EventHandler LastSelectedServerItemChanged;
         public event EventHandler BackgroundWorkStarted;
         public event EventHandler BackgroundWorkEnded;
 
-		public string CurrentServerItem
+		public string LastSelectedServerItem
 		{
 			get
 			{
-				return this.m_currentPath ?? string.Empty;
-			}
-			set
-			{
-				this.Navigate(value);
+				return this.m_lastSelectedPath ?? string.Empty;
 			}
 		}
 
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public ICollection<string> SelectedServerItems
+        {
+            get
+            {
+                return m_selectedItems.Keys;
+            }
+            set
+            {
+                treeView.BeginUpdate();
+                ClearExistingNodeSelection(value);
+                foreach (var i in value)
+                {
+                    TreeNodeServerItem tsi = null;
+                    TryFindNodeByServerItem(i, null, out tsi);
+                    if (tsi != null)
+                    {
+                        tsi.ColorSelected();
+                    }
+                    m_selectedItems.Add(i, tsi);
+                }
+                treeView.EndUpdate();
+            }
+        }
 		
 		public void Navigate(string initialPath)
 		{
@@ -147,7 +185,7 @@ namespace TFV
                 TreeNodeServerItem foundItem = null;
                 if (TryFindNodeByServerItem(initialPath, null, out foundItem))
                 {
-                    treeView.SelectedNode = foundItem;
+                    foundItem.EnsureVisible();
                     m_navigateToWhenLoaded = null;
                     return;
                 }
@@ -242,6 +280,13 @@ namespace TFV
             {
                 treeView.Nodes.Add(node);
             }
+
+            if (m_selectedItems.ContainsKey(node.ServerItem))
+            {
+                node.ColorSelected();
+                m_selectedItems[node.ServerItem] = node;
+            }
+
             return node;
 
 		}
@@ -345,7 +390,7 @@ namespace TFV
 
         private void Reload()
         {
-            string curItem = CurrentServerItem;
+            string curItem = LastSelectedServerItem;
             Reset();
             Navigate(curItem != null ? curItem : "$/");
         }
@@ -501,14 +546,73 @@ namespace TFV
             }
         }
 
+        private void SetExistingNodeSelection(TreeNodeServerItem treeNodeServerFolder, bool toggle)
+        {
+            if (m_selectedItems.ContainsKey(treeNodeServerFolder.ServerItem))
+            {
+                if (toggle)
+                {
+                    treeNodeServerFolder.ColorUnselected();
+                    m_selectedItems.Remove(treeNodeServerFolder.ServerItem);
+                }
+            }
+            else
+            {
+                treeNodeServerFolder.ColorSelected();
+                m_selectedItems.Add(treeNodeServerFolder.ServerItem, treeNodeServerFolder);
+            }
+        }
+
+        private void ClearExistingNodeSelection(ICollection<string> leaveAlone = null)
+        {
+            foreach (var node in m_selectedItems)
+            {
+                if (node.Value != null)
+                {
+                    if (leaveAlone != null && leaveAlone.Contains(node.Key))
+                        continue;
+                    node.Value.ColorUnselected();
+                }
+            }
+
+            m_selectedItems.Clear();
+        }
+
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
+
+        private void treeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
             if (e.Node is TreeNodeServerItem)
             {
                 TreeNodeServerItem treeNodeServerFolder = (TreeNodeServerItem)e.Node;
-                this.m_currentPath = treeNodeServerFolder.ServerItem;
-                if (CurrentServerItemChanged != null)
-                    CurrentServerItemChanged(this, new EventArgs());
+
+                treeView.BeginUpdate();
+                if (ModifierKeys.HasFlag(Keys.Shift))
+                {
+                    SetExistingNodeSelection(treeNodeServerFolder, ModifierKeys.HasFlag(Keys.Control));
+                    TreeNodeServerItem prevItem = treeNodeServerFolder.PrevVisibleNode as TreeNodeServerItem;
+                    while (prevItem != null && !prevItem.IsMultiSelect)
+                    {
+                        SetExistingNodeSelection(prevItem, ModifierKeys.HasFlag(Keys.Control));
+                        prevItem = prevItem.PrevVisibleNode as TreeNodeServerItem;
+                    }
+                }
+                else
+                {
+                    if (!ModifierKeys.HasFlag(Keys.Control))
+                    {
+                        ClearExistingNodeSelection(new string[] { treeNodeServerFolder.ServerItem } );
+                    }
+                    SetExistingNodeSelection(treeNodeServerFolder, ModifierKeys.HasFlag(Keys.Control));
+                }
+                treeView.EndUpdate();
+                e.Cancel = true;
+                this.m_lastSelectedPath = treeNodeServerFolder.ServerItem;
+                if (LastSelectedServerItemChanged != null)
+                    LastSelectedServerItemChanged(this, new EventArgs());
             }
         }
 

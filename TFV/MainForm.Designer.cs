@@ -175,7 +175,6 @@
             // 
             // stvServerTreeView
             // 
-            this.stvServerTreeView.CurrentServerItem = "";
             this.stvServerTreeView.DeletedState = Microsoft.TeamFoundation.VersionControl.Client.DeletedState.NonDeleted;
             this.stvServerTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stvServerTreeView.Location = new System.Drawing.Point(3, 3);
@@ -191,7 +190,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(288, 71);
+            this.tabPage2.Size = new System.Drawing.Size(288, 282);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Workspace";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -201,7 +200,7 @@
             this.tvWorkspace.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvWorkspace.Location = new System.Drawing.Point(3, 3);
             this.tvWorkspace.Name = "tvWorkspace";
-            this.tvWorkspace.Size = new System.Drawing.Size(282, 65);
+            this.tvWorkspace.Size = new System.Drawing.Size(282, 276);
             this.tvWorkspace.TabIndex = 1;
             // 
             // tabControl2
@@ -230,7 +229,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(580, 71);
+            this.tabPage4.Size = new System.Drawing.Size(580, 282);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;

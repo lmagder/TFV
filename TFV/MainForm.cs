@@ -40,11 +40,11 @@ namespace TFV
             UpdateLimitViewToWorkspace();
             UpdateShowDeleted();
 
-            stvServerTreeView.CurrentServerItemChanged += stvServerTreeView_CurrentServerItemChanged;
+            stvServerTreeView.LastSelectedServerItemChanged += stvServerTreeView_CurrentServerItemChanged;
             stvServerTreeView.BackgroundWorkStarted += delegate(object o, EventArgs e) { StartWaiting(); };
             stvServerTreeView.BackgroundWorkEnded += delegate(object o, EventArgs e) { StopWaiting(); };
 
-            cbAddress.Text = stvServerTreeView.CurrentServerItem;
+            cbAddress.Text = stvServerTreeView.LastSelectedServerItem;
 
             m_vcServer.UpdatedWorkspace += m_vcServer_UpdatedWorkspace;
             m_vcServer.FolderContentChanged += m_vcServer_FolderContentChanged;
@@ -56,7 +56,7 @@ namespace TFV
         {
             if (tcTrees.SelectedTab == tbServer)
             {
-                cbAddress.Text = stvServerTreeView.CurrentServerItem;
+                cbAddress.Text = stvServerTreeView.LastSelectedServerItem;
             }
         }
 
