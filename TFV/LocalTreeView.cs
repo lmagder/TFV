@@ -30,19 +30,16 @@ namespace TFV
 
             if (DpiHelper.IsScalingRequired)
             {
-                imageListIcons.ImageSize = DpiHelper.LogicalToDeviceUnits(imageListIcons.ImageSize);
                 imageListOverlays.ImageSize = DpiHelper.LogicalToDeviceUnits(imageListOverlays.ImageSize);
-                imageListIcons.Images.AddStrip(DpiHelper.ScaleBitmapLogicalToDevice(TFV.Properties.Resources.TreeViewIcons));
                 imageListOverlays.Images.AddStrip(DpiHelper.ScaleBitmapLogicalToDevice(TFV.Properties.Resources.TreeViewStateIcons));
             }
             else
             {
-                imageListIcons.Images.AddStrip(TFV.Properties.Resources.TreeViewIcons);
                 imageListOverlays.Images.AddStrip(TFV.Properties.Resources.TreeViewStateIcons);
             }
 
             ImageList temp = new ImageList();
-            temp.ImageSize = imageListIcons.ImageSize;
+            temp.ImageSize = DpiHelper.LogicalToDeviceUnits(new Size(16,16));
             temp.ColorDepth = ColorDepth.Depth32Bit;
             treeView.ImageList = temp;
         }
@@ -62,6 +59,37 @@ namespace TFV
 
             [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
             public extern static int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+
+            [DllImport("shell32.dll")]
+            private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+            [StructLayout(LayoutKind.Sequential)]
+            private struct SHFILEINFO
+            {
+                public IntPtr hIcon;
+                public IntPtr iIcon;
+                public uint dwAttributes;
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+                public string szDisplayName;
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+                public string szTypeName;
+            };
+            private const uint SHGFI_ICON = 0x100;
+            private const uint SHGFI_LARGEICON = 0x0; // 'Large icon
+            private const uint SHGFI_SMALLICON = 0x1; // 'Small icon
+
+            public static System.Drawing.Icon GetLargeIcon(string file)
+            {
+                SHFILEINFO shinfo = new SHFILEINFO();
+                IntPtr hImgLarge = SHGetFileInfo(file, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_LARGEICON);
+                return System.Drawing.Icon.FromHandle(shinfo.hIcon);
+            }
+
+            public static System.Drawing.Icon GetSmallIcon(string file)
+            {
+                SHFILEINFO shinfo = new SHFILEINFO();
+                IntPtr hImgLarge = SHGetFileInfo(file, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_SMALLICON);
+                return System.Drawing.Icon.FromHandle(shinfo.hIcon);
+            }
         }
         private VersionControlServer m_sourceControl;
         private Workspace m_workspace;
@@ -104,18 +132,23 @@ namespace TFV
         private class TreeNodeLocalItem : TreeNode
         {
             public string LocalItem { get; private set; }
-            public int CollapsedImageIndex { get; private set; }
-            public int ExpandedImageIndex { get; private set; }
             public int ItemID { get; private set; }
             public ExtendedItem ExItem { get; private set; }
-            public TreeNodeLocalItem(ExtendedItem localItem, string text, int imageIndex, int expandedImageIndex) : base(text, 0, 0)
+            public TreeNodeLocalItem(ExtendedItem localItem, string text) : base(text, 0, 0)
             {
                 this.LocalItem = localItem != null ? localItem.LocalItem : "";
-                this.CollapsedImageIndex = imageIndex;
-                this.ExpandedImageIndex = expandedImageIndex;
                 this.ItemID = localItem != null ? localItem.ItemId : 0;
                 this.IsMultiSelect = false;
                 this.ExItem = localItem;
+            }
+
+            public TreeNodeLocalItem(string fname, string text)
+                : base(text, 0, 0)
+            {
+                this.LocalItem = fname;
+                this.ItemID = 0;
+                this.IsMultiSelect = false;
+                this.ExItem = null;
             }
 
             public bool IsMultiSelect { get; private set; }
@@ -195,57 +228,43 @@ namespace TFV
             }
         }
 
-        private TreeNodeLocalItem AttachTreeNode(TreeNode parent, ExtendedItem item, bool fullPath)
+        private TreeNodeLocalItem AttachTreeNode(TreeNode parent, string name, TempItemSet.TempItem item)
         {
             TreeNodeLocalItem node;
-            if (item == null)
+            if (parent == null)
             {
                 //the root
-                node = new TreeNodeLocalItem(item, m_workspace != null ? m_workspace.DisplayName : "wat?",  4,5);
+                node = new TreeNodeLocalItem("", name);
             }
             else
             {
-                string fileName = fullPath ? item.LocalItem : Path.GetFileName(item.LocalItem);
-                if (item.IsBranch)
+                if (item.ServerItem != null)
                 {
-                    if (item.DeletionId != 0)
+                    if (item.ServerItem.ItemType == ItemType.Folder)
                     {
-                        node = new TreeNodeLocalItem(item, fileName, 2, 2);
+                        node = new TreeNodeLocalItem(item.ServerItem, name);
+                        node.Nodes.Add(new TreeNodeWorking());
+                    }
+                    else if (item.ServerItem.ItemType == ItemType.File)
+                    {
+                        node = new TreeNodeLocalItem(item.ServerItem, name);
                     }
                     else
                     {
-                        node = new TreeNodeLocalItem(item, fileName, 1, 1);
-                    }
-                    node.Nodes.Add(new TreeNodeWorking());
-                }
-                else if (item.ItemType == ItemType.Folder)
-                {
-                  
-                    if (item.DeletionId != 0)
-                    {
-                        node = new TreeNodeLocalItem(item, fileName, 3, 3);
-                    }
-                    else
-                    {
-                        node = new TreeNodeLocalItem(item, fileName, 4, 5);
-                    }
-                  
-                    node.Nodes.Add(new TreeNodeWorking());
-                }
-                else if (item.ItemType == ItemType.File)
-                {
-                    if (item.DeletionId != 0)
-                    {
-                        node = new TreeNodeLocalItem(item, fileName, 3, 3);
-                    }
-                    else
-                    {
-                        node = new TreeNodeLocalItem(item, fileName, 12, 12);
+                        return null;
                     }
                 }
                 else
                 {
-                    return null;
+                    node = new TreeNodeLocalItem(item.LocalPath, name);
+                    if (Directory.Exists(item.LocalPath))
+                        node.Nodes.Add(new TreeNodeWorking());
+                }
+
+                if (m_selectedItems.ContainsKey(node.LocalItem))
+                {
+                    node.ColorSelected();
+                    m_selectedItems[node.LocalItem] = node;
                 }
             }
 
@@ -257,14 +276,7 @@ namespace TFV
             {
                 treeView.Nodes.Add(node);
             }
-
-            if (m_selectedItems.ContainsKey(node.LocalItem))
-            {
-                node.ColorSelected();
-                m_selectedItems[node.LocalItem] = node;
-            }
-
-
+                      
 
             return node;
 
@@ -293,7 +305,7 @@ namespace TFV
             m_toExpand.Clear();
             treeView.BeginUpdate();
             treeView.Nodes.Clear();
-            TreeNodeLocalItem root = AttachTreeNode(null, null, true);
+            TreeNodeLocalItem root = AttachTreeNode(null, m_workspace != null ? m_workspace.DisplayName : "wat?", new TempItemSet.TempItem());
             treeView.SelectedNode = root;
             if (m_workspace != null)
             {
@@ -308,7 +320,7 @@ namespace TFV
                 {
                     foreach(var j in i)
                     {
-                        AttachTreeNode(root, j, true);
+                        AttachTreeNode(root, j.LocalItem, new TempItemSet.TempItem { LocalPath = j.LocalItem, ServerItem = j });
                     }
                 }
                     
@@ -325,7 +337,13 @@ namespace TFV
             }
             if (startNode == null)
             {
-                foundNode = (TreeNodeLocalItem)treeView.Nodes[0];
+                TreeNodeLocalItem rootNode = (TreeNodeLocalItem)treeView.Nodes[0];
+                foreach(TreeNode node in rootNode.Nodes)
+                {
+                    if (TryFindNodeByServerItem(serverItem, (TreeNodeLocalItem)node, out foundNode))
+                        return true;
+                }
+                return false;
             }
             else
             {
@@ -349,11 +367,11 @@ namespace TFV
         private int BinarySearchForNextNode(TreeNodeLocalItem node, string serverItem)
         {
             int num = node.LocalItem.Length;
-            if (serverItem[num] == '/')
+            if (serverItem[num] == '\\')
             {
                 num++;
             }
-            int num2 = serverItem.IndexOf('/', num);
+            int num2 = serverItem.IndexOf('\\', num);
             int num3 = ((num2 < 0) ? serverItem.Length : num2) - num;
             int i = 0;
             int num4 = node.Nodes.Count - 1;
@@ -361,7 +379,7 @@ namespace TFV
             {
                 int num5 = i + (num4 - i >> 1);
                 TreeNodeLocalItem treeNodeServerFolder = (TreeNodeLocalItem)node.Nodes[num5];
-                int num6 = treeNodeServerFolder.LocalItem.IndexOf('/', num);
+                int num6 = treeNodeServerFolder.LocalItem.IndexOf('\\', num);
                 int num7 = ((num6 < 0) ? treeNodeServerFolder.LocalItem.Length : num6) - num;
                 int num8 = string.Compare(treeNodeServerFolder.LocalItem, num, serverItem, num, Math.Min(num3, num7), StringComparison.OrdinalIgnoreCase);
                 if (num8 == 0)
@@ -390,7 +408,7 @@ namespace TFV
         {
             string curItem = LastSelectedServerItem;
             Reset();
-            Navigate(curItem != null ? curItem : "$/");
+            Navigate(curItem != null ? curItem : "");
         }
 
         public bool ShowFiles
@@ -410,7 +428,12 @@ namespace TFV
         class TempItemSet
         {
             public string QueryPath;
-            public ExtendedItem[] Items;
+            public struct TempItem
+            {
+                public string LocalPath;
+                public ExtendedItem ServerItem;
+            }
+            public TempItem[] Items;
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -419,23 +442,40 @@ namespace TFV
                 return;
 
             string[] queryItems = (string[])e.Argument;
-            ItemSpec[] array = new ItemSpec[queryItems.Length];
+            TempItemSet[] result = new TempItemSet[queryItems.Length];
             for (int i = 0; i < queryItems.Length; i++)
             {
-                array[i] = new ItemSpec(FileSpec.Combine(m_workspace.GetServerItemForLocalItem(queryItems[i]), "*"), RecursionType.OneLevel);
-            }
-            ExtendedItem[][] itemSets;
-            itemSets = m_workspace.GetExtendedItems(array, DeletedState.Any, ShowFiles ? ItemType.Any : ItemType.Folder, GetItemsOptions.IncludeBranchInfo);
-            TempItemSet[] result = new TempItemSet[itemSets.Length];
-            for (int i = 0; i < itemSets.Length; i++)
-            {
-                result[i] = new TempItemSet
+                result[i] = new TempItemSet();
+                result[i].QueryPath = queryItems[i];
+
+                List<ItemSpec> tempList = new List<ItemSpec>();
+                List<int> tempIndx = new List<int>();
+                string[] filenames = Directory.EnumerateFileSystemEntries(queryItems[i]).ToArray();
+                result[i].Items = new TempItemSet.TempItem[filenames.Length];
+
+                for (int j = 0; j < filenames.Length; j++)
                 {
-                    QueryPath = queryItems[i],
-                    Items = itemSets[i].Where((item) => (item.LocalItem != queryItems[i])).ToArray()
-                };
+                    result[i].Items[j].LocalPath = filenames[j];
+                    try
+                    {
+                        string tfsPath = m_workspace.GetServerItemForLocalItem(filenames[j]);
+                        tempList.Add(new ItemSpec(tfsPath, RecursionType.None));
+                        tempIndx.Add(j);
+                    }
+                    catch (ItemNotMappedException) { }
+                    catch (ItemCloakedException) { }
+                }
+                ExtendedItem[][] itemSets = m_workspace.GetExtendedItems(tempList.ToArray(), DeletedState.Any, ItemType.Any);
+                for (int j = 0; j < itemSets.Length; j++)
+                {
+                    if (itemSets[j].Length > 0)
+                    {
+                        result[i].Items[tempIndx[j]].ServerItem = itemSets[j][0];
+                    }
+                }
+                Array.Sort(result[i].Items, (a, b) => a.LocalPath.CompareTo(b.LocalPath));
             }
-            
+
             e.Result = result;
         }
 
@@ -464,9 +504,9 @@ namespace TFV
                         if (TryFindNodeByServerItem(itemSet.QueryPath, treeNodeServerFolder, out treeNodeServerFolder2) && NodeNeedsExpansion(treeNodeServerFolder2))
                         {
                             treeNodeServerFolder2.Nodes.Clear();
-                            foreach (ExtendedItem i in itemSet.Items)
+                            foreach (TempItemSet.TempItem i in itemSet.Items)
                             {
-                                AttachTreeNode(treeNodeServerFolder2, i, false);
+                                AttachTreeNode(treeNodeServerFolder2, Path.GetFileName(i.LocalPath), i);
                             }
                             if (!treeNodeServerFolder2.IsExpanded && m_navigateToWhenLoaded == null)
                             {
@@ -580,23 +620,26 @@ namespace TFV
 
                 VisualStyleRenderer vsr = new VisualStyleRenderer("Explorer::TreeView", element.Part, element.State);
                 Point drawLoc = titem.Bounds.Location;
-                drawLoc.X -= imageListIcons.ImageSize.Width;
+                var imageSize = treeView.ImageList.ImageSize;
+                drawLoc.X -= imageSize.Width;
                 using (SolidBrush b = new SolidBrush(titem.BackColor))
                 {
-                    e.Graphics.FillRectangle(b, drawLoc.X, drawLoc.Y, titem.Bounds.Width + imageListIcons.ImageSize.Width, titem.Bounds.Height);
+                    e.Graphics.FillRectangle(b, drawLoc.X, drawLoc.Y, titem.Bounds.Width + imageSize.Width, titem.Bounds.Height);
                 }
                 Rectangle textRect = vsr.GetBackgroundContentRectangle(e.Graphics, titem.Bounds);
 
                 var pixelSize = DpiHelper.LogicalToDeviceUnits(new Size(1, 1));
                 textRect.Offset(pixelSize.Width, pixelSize.Height);
                 bool disabled = titem.ExItem != null ? !titem.ExItem.IsInWorkspace : false;
-                vsr.DrawText(e.Graphics, textRect, titem.Text, disabled, TextFormatFlags.VerticalCenter | TextFormatFlags.LeftAndRightPadding | TextFormatFlags.GlyphOverhangPadding);
+                vsr.DrawText(e.Graphics, textRect, titem.Text, disabled, TextFormatFlags.VerticalCenter | TextFormatFlags.LeftAndRightPadding);
 
-                imageListIcons.Draw(e.Graphics, drawLoc, titem.IsExpanded ? titem.ExpandedImageIndex : titem.CollapsedImageIndex);
                 ExtendedItem item = titem.ExItem;
+
+                Icon fileIcon = string.IsNullOrEmpty(titem.LocalItem) ? TFV.Properties.Resources.TFSServer : NativeMethods.GetSmallIcon(titem.LocalItem);
+                e.Graphics.DrawIcon(fileIcon, new Rectangle(drawLoc, imageSize));
+               
                 if (item != null)
                 {
-
                     if (item.ChangeType.HasFlag(ChangeType.Add))
                         imageListOverlays.Draw(e.Graphics, drawLoc, 0);
                     else if (item.ChangeType.HasFlag(ChangeType.Delete))
@@ -631,6 +674,15 @@ namespace TFV
                     StartBackgroundWorkerIfNeeded();
                     e.Cancel = true;
                 }
+            }
+        }
+
+        private void treeView_AfterCollapse(object sender, TreeViewEventArgs e)
+        {
+            if (!NodeNeedsExpansion(e.Node) && e.Node.Nodes.Count > 0)
+            {
+                e.Node.Nodes.Clear();
+                e.Node.Nodes.Add(new TreeNodeWorking());
             }
         }
     }

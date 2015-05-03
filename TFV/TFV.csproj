@@ -226,6 +226,7 @@
   <ItemGroup>
     <None Include="Resources\TreeViewIcons.png" />
     <None Include="Resources\TreeViewStateIcons.png" />
+    <None Include="Resources\TFSServer_13310.ico" />
     <Content Include="TFSServer_13310.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -632,7 +632,6 @@ namespace TFV
         private void treeView_DrawNode(object sender, DrawTreeNodeEventArgs e)
         {
             TreeNodeServerItem titem = e.Node as TreeNodeServerItem;
-
             if (titem != null)
             {
 
@@ -658,7 +657,7 @@ namespace TFV
                 var pixelSize = DpiHelper.LogicalToDeviceUnits(new Size(1, 1));
                 textRect.Offset(pixelSize.Width, pixelSize.Height);
                 bool disabled = titem.ExItem != null ? !titem.ExItem.IsInWorkspace : false;
-                vsr.DrawText(e.Graphics, textRect, titem.Text, disabled, TextFormatFlags.VerticalCenter | TextFormatFlags.LeftAndRightPadding | TextFormatFlags.GlyphOverhangPadding);
+                vsr.DrawText(e.Graphics, textRect, titem.Text, disabled, TextFormatFlags.VerticalCenter | TextFormatFlags.LeftAndRightPadding);
 
                 imageListIcons.Draw(e.Graphics, drawLoc, titem.IsExpanded ? titem.ExpandedImageIndex : titem.CollapsedImageIndex);
                 ExtendedItem item = titem.ExItem;
@@ -699,6 +698,15 @@ namespace TFV
                     StartBackgroundWorkerIfNeeded();
                     e.Cancel = true;
                 }
+            }
+        }
+
+        private void treeView_AfterCollapse(object sender, TreeViewEventArgs e)
+        {
+            if (!NodeNeedsExpansion(e.Node) && e.Node.Nodes.Count > 0)
+            {
+                e.Node.Nodes.Clear();
+                e.Node.Nodes.Add(new TreeNodeWorking());
             }
         }
     }
