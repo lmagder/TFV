@@ -38,12 +38,23 @@ namespace TFV
 
             stvServerTreeView.SourceControl = m_vcServer;
             stvServerTreeView.Workspace = m_workspace;
+
+
+            ltvLocalTreeView.SourceControl = m_vcServer;
+            ltvLocalTreeView.Workspace = m_workspace;
+
             UpdateLimitViewToWorkspace();
             UpdateShowDeleted();
 
             stvServerTreeView.LastSelectedServerItemChanged += stvServerTreeView_CurrentServerItemChanged;
             stvServerTreeView.BackgroundWorkStarted += delegate(object o, EventArgs e) { StartWaiting(); };
             stvServerTreeView.BackgroundWorkEnded += delegate(object o, EventArgs e) { StopWaiting(); };
+
+
+            ltvLocalTreeView.LastSelectedServerItemChanged += stvServerTreeView_CurrentServerItemChanged;
+            ltvLocalTreeView.BackgroundWorkStarted += delegate (object o, EventArgs e) { StartWaiting(); };
+            ltvLocalTreeView.BackgroundWorkEnded += delegate (object o, EventArgs e) { StopWaiting(); };
+
 
             cbAddress.Text = stvServerTreeView.LastSelectedServerItem;
 

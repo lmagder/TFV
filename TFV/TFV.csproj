@@ -149,6 +149,12 @@
     <Compile Include="SelectWorkspace.Designer.cs">
       <DependentUpon>SelectWorkspace.cs</DependentUpon>
     </Compile>
+    <Compile Include="LocalTreeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LocalTreeView.Designer.cs">
+      <DependentUpon>LocalTreeView.cs</DependentUpon>
+    </Compile>
     <Compile Include="ServerTreeView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -178,6 +184,9 @@
     </Compile>
     <EmbeddedResource Include="SelectWorkspace.resx">
       <DependentUpon>SelectWorkspace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocalTreeView.resx">
+      <DependentUpon>LocalTreeView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ServerTreeView.resx">
       <DependentUpon>ServerTreeView.cs</DependentUpon>

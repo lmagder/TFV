@@ -40,9 +40,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tcTrees = new System.Windows.Forms.TabControl();
             this.tbServer = new System.Windows.Forms.TabPage();
-            this.stvServerTreeView = new TFV.ServerTreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tvWorkspace = new System.Windows.Forms.TreeView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -55,9 +53,10 @@
             this.menuInWorkspace = new System.Windows.Forms.MenuItem();
             this.cbAddress = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusBarProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.stvServerTreeView = new TFV.ServerTreeView();
+            this.ltvLocalTreeView = new TFV.LocalTreeView();
             menuItem1 = new System.Windows.Forms.MenuItem();
             menuItem3 = new System.Windows.Forms.MenuItem();
             menuItem2 = new System.Windows.Forms.MenuItem();
@@ -119,7 +118,8 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 31);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 45);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(6);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -130,14 +130,16 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(888, 414);
-            this.splitContainer1.SplitterDistance = 308;
+            this.splitContainer1.Size = new System.Drawing.Size(1776, 791);
+            this.splitContainer1.SplitterDistance = 587;
+            this.splitContainer1.SplitterWidth = 8;
             this.splitContainer1.TabIndex = 2;
             // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(6);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -147,8 +149,9 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tabControl2);
-            this.splitContainer2.Size = new System.Drawing.Size(888, 308);
-            this.splitContainer2.SplitterDistance = 296;
+            this.splitContainer2.Size = new System.Drawing.Size(1776, 587);
+            this.splitContainer2.SplitterDistance = 592;
+            this.splitContainer2.SplitterWidth = 8;
             this.splitContainer2.TabIndex = 0;
             // 
             // tcTrees
@@ -157,51 +160,35 @@
             this.tcTrees.Controls.Add(this.tabPage2);
             this.tcTrees.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcTrees.Location = new System.Drawing.Point(0, 0);
+            this.tcTrees.Margin = new System.Windows.Forms.Padding(6);
             this.tcTrees.Name = "tcTrees";
             this.tcTrees.SelectedIndex = 0;
-            this.tcTrees.Size = new System.Drawing.Size(296, 308);
+            this.tcTrees.Size = new System.Drawing.Size(592, 587);
             this.tcTrees.TabIndex = 0;
             // 
             // tbServer
             // 
             this.tbServer.Controls.Add(this.stvServerTreeView);
-            this.tbServer.Location = new System.Drawing.Point(4, 22);
+            this.tbServer.Location = new System.Drawing.Point(4, 34);
+            this.tbServer.Margin = new System.Windows.Forms.Padding(6);
             this.tbServer.Name = "tbServer";
-            this.tbServer.Padding = new System.Windows.Forms.Padding(3);
-            this.tbServer.Size = new System.Drawing.Size(288, 282);
+            this.tbServer.Padding = new System.Windows.Forms.Padding(6);
+            this.tbServer.Size = new System.Drawing.Size(584, 557);
             this.tbServer.TabIndex = 0;
             this.tbServer.Text = "Server";
             this.tbServer.UseVisualStyleBackColor = true;
             // 
-            // stvServerTreeView
-            // 
-            this.stvServerTreeView.DeletedState = Microsoft.TeamFoundation.VersionControl.Client.DeletedState.NonDeleted;
-            this.stvServerTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stvServerTreeView.Location = new System.Drawing.Point(3, 3);
-            this.stvServerTreeView.Name = "stvServerTreeView";
-            this.stvServerTreeView.ShowFiles = true;
-            this.stvServerTreeView.Size = new System.Drawing.Size(282, 276);
-            this.stvServerTreeView.SourceControl = null;
-            this.stvServerTreeView.TabIndex = 0;
-            // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.tvWorkspace);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Controls.Add(this.ltvLocalTreeView);
+            this.tabPage2.Location = new System.Drawing.Point(4, 34);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(288, 282);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(6);
+            this.tabPage2.Size = new System.Drawing.Size(584, 549);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Workspace";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // tvWorkspace
-            // 
-            this.tvWorkspace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvWorkspace.Location = new System.Drawing.Point(3, 3);
-            this.tvWorkspace.Name = "tvWorkspace";
-            this.tvWorkspace.Size = new System.Drawing.Size(282, 276);
-            this.tvWorkspace.TabIndex = 1;
             // 
             // tabControl2
             // 
@@ -209,27 +196,30 @@
             this.tabControl2.Controls.Add(this.tabPage4);
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
+            this.tabControl2.Margin = new System.Windows.Forms.Padding(6);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(588, 308);
+            this.tabControl2.Size = new System.Drawing.Size(1176, 587);
             this.tabControl2.TabIndex = 0;
             // 
             // tabPage3
             // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 34);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(580, 282);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(6);
+            this.tabPage3.Size = new System.Drawing.Size(1168, 549);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 34);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(580, 282);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(6);
+            this.tabPage4.Size = new System.Drawing.Size(1168, 557);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -239,10 +229,11 @@
             this.textBox1.BackColor = System.Drawing.SystemColors.Window;
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(6);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(888, 102);
+            this.textBox1.Size = new System.Drawing.Size(1776, 196);
             this.textBox1.TabIndex = 0;
             this.textBox1.WordWrap = false;
             // 
@@ -293,9 +284,10 @@
             this.cbAddress.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cbAddress.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbAddress.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cbAddress.Location = new System.Drawing.Point(5, 5);
+            this.cbAddress.Location = new System.Drawing.Point(10, 6);
+            this.cbAddress.Margin = new System.Windows.Forms.Padding(6);
             this.cbAddress.Name = "cbAddress";
-            this.cbAddress.Size = new System.Drawing.Size(852, 21);
+            this.cbAddress.Size = new System.Drawing.Size(1760, 33);
             this.cbAddress.TabIndex = 0;
             this.cbAddress.SelectionChangeCommitted += new System.EventHandler(this.cbAddress_SelectionChangeCommitted);
             this.cbAddress.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbAddress_KeyDown);
@@ -309,37 +301,28 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.button1, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.cbAddress, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
+            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(888, 31);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1776, 45);
             this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.button1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(863, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(22, 25);
-            this.button1.TabIndex = 0;
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // statusBar
             // 
             this.statusBar.GripMargin = new System.Windows.Forms.Padding(0);
+            this.statusBar.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusBarProgress});
             this.statusBar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.statusBar.Location = new System.Drawing.Point(0, 445);
+            this.statusBar.Location = new System.Drawing.Point(0, 836);
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(888, 22);
+            this.statusBar.Padding = new System.Windows.Forms.Padding(2, 0, 28, 0);
+            this.statusBar.Size = new System.Drawing.Size(1776, 22);
             this.statusBar.TabIndex = 3;
             this.statusBar.Text = "statusStrip1";
             // 
@@ -349,20 +332,47 @@
             this.statusBarProgress.MarqueeAnimationSpeed = 50;
             this.statusBarProgress.Name = "statusBarProgress";
             this.statusBarProgress.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.statusBarProgress.Size = new System.Drawing.Size(100, 16);
+            this.statusBarProgress.Size = new System.Drawing.Size(200, 31);
             this.statusBarProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.statusBarProgress.Value = 50;
             this.statusBarProgress.Visible = false;
             // 
+            // stvServerTreeView
+            // 
+            this.stvServerTreeView.DeletedState = Microsoft.TeamFoundation.VersionControl.Client.DeletedState.NonDeleted;
+            this.stvServerTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stvServerTreeView.LimitToWorkspace = false;
+            this.stvServerTreeView.Location = new System.Drawing.Point(6, 6);
+            this.stvServerTreeView.Margin = new System.Windows.Forms.Padding(12);
+            this.stvServerTreeView.Name = "stvServerTreeView";
+            this.stvServerTreeView.ShowFiles = true;
+            this.stvServerTreeView.Size = new System.Drawing.Size(572, 545);
+            this.stvServerTreeView.SourceControl = null;
+            this.stvServerTreeView.TabIndex = 0;
+            this.stvServerTreeView.Workspace = null;
+            // 
+            // ltvLocalTreeView
+            // 
+            this.ltvLocalTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ltvLocalTreeView.Location = new System.Drawing.Point(6, 6);
+            this.ltvLocalTreeView.Margin = new System.Windows.Forms.Padding(6);
+            this.ltvLocalTreeView.Name = "ltvLocalTreeView";
+            this.ltvLocalTreeView.ShowFiles = true;
+            this.ltvLocalTreeView.Size = new System.Drawing.Size(572, 537);
+            this.ltvLocalTreeView.SourceControl = null;
+            this.ltvLocalTreeView.TabIndex = 0;
+            this.ltvLocalTreeView.Workspace = null;
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(888, 467);
+            this.ClientSize = new System.Drawing.Size(1776, 858);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Menu = this.mainMenu;
             this.Name = "MainForm";
             this.Text = "TFV";
@@ -405,8 +415,6 @@
         private System.Windows.Forms.MenuItem menuAbout;
         private System.Windows.Forms.ComboBox cbAddress;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TreeView tvWorkspace;
         private ServerTreeView stvServerTreeView;
         private System.Windows.Forms.MenuItem menuItem4;
         private System.Windows.Forms.MenuItem menuShowDeleted;
@@ -415,6 +423,7 @@
         private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripProgressBar statusBarProgress;
+        private LocalTreeView ltvLocalTreeView;
     }
 }
 
