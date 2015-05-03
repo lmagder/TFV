@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Windows.Forms.VisualStyles;
 
 using Microsoft.TeamFoundation.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
@@ -38,6 +39,11 @@ namespace TFV
                 imageListIcons.Images.AddStrip(TFV.Properties.Resources.TreeViewIcons);
                 imageListOverlays.Images.AddStrip(TFV.Properties.Resources.TreeViewStateIcons);
             }
+
+            ImageList temp = new ImageList();
+            temp.ImageSize = imageListIcons.ImageSize;
+            temp.ColorDepth = ColorDepth.Depth32Bit;
+            treeView.ImageList = temp;
         }
 
 
@@ -48,7 +54,7 @@ namespace TFV
             public const int TVM_GETEXTENDEDSTYLE = TV_FIRST + 45;
             public const int TVS_EX_FADEINOUTEXPANDOS = 0x0040;
             public const int TVS_EX_DOUBLEBUFFER = 0x0004;
-            
+
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
             internal static extern int SendMessage(IntPtr hWnd, UInt32 Msg, int wParam, int lParam);
@@ -57,8 +63,10 @@ namespace TFV
             public extern static int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
         }
         private VersionControlServer m_sourceControl;
-        private VersionSpec m_versionSpec = VersionSpec.Latest;
-		private DeletedState m_deletedState;
+        private Workspace m_workspace;
+        private WorkspaceVersionSpec m_workspaceSpec;
+        private bool m_limitToWorkspace;
+        private DeletedState m_deletedState;
 
         public VersionControlServer SourceControl
         {
@@ -73,14 +81,28 @@ namespace TFV
             }
         }
 
-        public VersionSpec VersionSpec
+        public Workspace Workspace
         {
-            get { return m_versionSpec; }
+            get { return m_workspace; }
             set
             {
-                if (value != m_versionSpec)
+                if (value != m_workspace)
                 {
-                    m_versionSpec = value;
+                    m_workspace = value;
+                    m_workspaceSpec = new WorkspaceVersionSpec(m_workspace);
+                    Reload();
+                }
+            }
+        }
+
+        public bool LimitToWorkspace
+        {
+            get { return m_limitToWorkspace; }
+            set
+            {
+                if (value != m_limitToWorkspace)
+                {
+                    m_limitToWorkspace = value;
                     Reload();
                 }
             }
@@ -100,46 +122,46 @@ namespace TFV
         }
 
 
-		
-		private class TreeNodeWorking : TreeNode
-		{
-			public TreeNodeWorking() : base(string.Empty, 3, 3)
-			{
-			}
-		}
-		private class TreeNodeServerItem : TreeNode
-		{
-			public string ServerItem { get; private set; }
-			public int CollapsedImageIndex  { get; private set; }
-			public int ExpandedImageIndex  { get; private set; }
+
+        private class TreeNodeWorking : TreeNode
+        {
+            public TreeNodeWorking() : base(string.Empty, 3, 3)
+            {
+            }
+        }
+        private class TreeNodeServerItem : TreeNode
+        {
+            public string ServerItem { get; private set; }
+            public int CollapsedImageIndex { get; private set; }
+            public int ExpandedImageIndex { get; private set; }
             public int ItemID { get; private set; }
-			public TreeNodeServerItem(Item serverItem, string text, int imageIndex, int expandedImageIndex) : base(text, imageIndex, imageIndex)
-			{
-				this.ServerItem = serverItem != null ? serverItem.ServerItem : "$/";
-				this.CollapsedImageIndex = imageIndex;
-				this.ExpandedImageIndex = expandedImageIndex;
+            public ExtendedItem ExItem { get; private set; }
+            public TreeNodeServerItem(ExtendedItem serverItem, string text, int imageIndex, int expandedImageIndex) : base(text, 0, 0)
+            {
+                this.ServerItem = serverItem != null ? serverItem.TargetServerItem : "$/";
+                this.CollapsedImageIndex = imageIndex;
+                this.ExpandedImageIndex = expandedImageIndex;
                 this.ItemID = serverItem != null ? serverItem.ItemId : 0;
                 this.IsMultiSelect = false;
-			}
+                this.ExItem = serverItem;
+            }
 
             public bool IsMultiSelect { get; private set; }
             public void ColorSelected()
             {
                 BackColor = SystemColors.Highlight;
-                ForeColor = SystemColors.HighlightText;
                 IsMultiSelect = true;
             }
 
             public void ColorUnselected()
             {
                 BackColor = Color.Empty;
-                ForeColor = SystemColors.ControlText;
                 IsMultiSelect = false;
             }
-		}
+        }
 
         private List<string> m_toExpand = new List<string>();
-		private string m_lastSelectedPath, m_navigateToWhenLoaded;
+        private string m_lastSelectedPath, m_navigateToWhenLoaded;
 
         private SortedDictionary<string, TreeNodeServerItem> m_selectedItems = new SortedDictionary<string, TreeNodeServerItem>();
 
@@ -147,13 +169,13 @@ namespace TFV
         public event EventHandler BackgroundWorkStarted;
         public event EventHandler BackgroundWorkEnded;
 
-		public string LastSelectedServerItem
-		{
-			get
-			{
-				return this.m_lastSelectedPath ?? string.Empty;
-			}
-		}
+        public string LastSelectedServerItem
+        {
+            get
+            {
+                return this.m_lastSelectedPath ?? string.Empty;
+            }
+        }
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ICollection<string> SelectedServerItems
@@ -179,12 +201,12 @@ namespace TFV
                 treeView.EndUpdate();
             }
         }
-		
-		public void Navigate(string initialPath)
-		{
-			if (initialPath != null && initialPath.StartsWith("$/") && initialPath.Length > 2)
-			{
-				initialPath = VersionControlPath.GetFullPath(initialPath);
+
+        public void Navigate(string initialPath)
+        {
+            if (initialPath != null && initialPath.StartsWith("$/") && initialPath.Length > 2)
+            {
+                initialPath = VersionControlPath.GetFullPath(initialPath);
 
                 TreeNodeServerItem foundItem = null;
                 if (TryFindNodeByServerItem(initialPath, null, out foundItem))
@@ -194,67 +216,67 @@ namespace TFV
                     return;
                 }
 
-				List<string> list = new List<string>();
-				string folderName = VersionControlPath.GetFolderName(initialPath);
-				while (!VersionControlPath.Equals(folderName, "$/"))
-				{
-					list.Add(folderName);
-					folderName = VersionControlPath.GetFolderName(folderName);
-				}
-				list.Add("$/");
-				list.Reverse();
+                List<string> list = new List<string>();
+                string folderName = VersionControlPath.GetFolderName(initialPath);
+                while (!VersionControlPath.Equals(folderName, "$/"))
+                {
+                    list.Add(folderName);
+                    folderName = VersionControlPath.GetFolderName(folderName);
+                }
+                list.Add("$/");
+                list.Reverse();
                 m_toExpand.AddRange(list);
                 m_navigateToWhenLoaded = initialPath;
-				StartBackgroundWorkerIfNeeded();
-			}
-		}
+                StartBackgroundWorkerIfNeeded();
+            }
+        }
 
-        private TreeNodeServerItem AttachTreeNode(TreeNode parent, Item item)
-		{
+        private TreeNodeServerItem AttachTreeNode(TreeNode parent, ExtendedItem item)
+        {
             TreeNodeServerItem node;
             if (item == null)
             {
                 //the root
-                node = new TreeNodeServerItem(item, m_sourceControl.TeamProjectCollection.Name, 5, 5);
+                node = new TreeNodeServerItem(item, m_sourceControl.TeamProjectCollection.Name, 6, 6);
                 node.Nodes.Add(new TreeNodeWorking());
             }
             else
             {
-                string fileName = VersionControlPath.GetFileName(item.ServerItem);
+                string fileName = VersionControlPath.GetFileName(item.TargetServerItem);
                 if (item.IsBranch)
                 {
                     if (item.DeletionId != 0)
                     {
-                        node = new TreeNodeServerItem(item, fileName, 1, 1);
+                        node = new TreeNodeServerItem(item, fileName, 2, 2);
                     }
                     else
                     {
-                        node = new TreeNodeServerItem(item, fileName, 0, 0);
+                        node = new TreeNodeServerItem(item, fileName, 1, 1);
                     }
                     node.Nodes.Add(new TreeNodeWorking());
                 }
                 else if (item.ItemType == ItemType.Folder)
                 {
-                    if (VersionControlPath.GetFolderDepth(item.ServerItem) == 1)
+                    if (VersionControlPath.GetFolderDepth(item.TargetServerItem) == 1)
                     {
                         if (item.DeletionId != 0)
                         {
-                            node = new TreeNodeServerItem(item, fileName, 2, 2);
+                            node = new TreeNodeServerItem(item, fileName, 3, 3);
                         }
                         else
                         {
-                            node = new TreeNodeServerItem(item, fileName, 6, 6);
+                            node = new TreeNodeServerItem(item, fileName, 7, 7);
                         }
                     }
                     else
                     {
                         if (item.DeletionId != 0)
                         {
-                            node = new TreeNodeServerItem(item, fileName, 2, 2);
+                            node = new TreeNodeServerItem(item, fileName, 3, 3);
                         }
                         else
                         {
-                            node = new TreeNodeServerItem(item, fileName, 3, 4);
+                            node = new TreeNodeServerItem(item, fileName, 4, 5);
                         }
                     }
                     node.Nodes.Add(new TreeNodeWorking());
@@ -263,11 +285,11 @@ namespace TFV
                 {
                     if (item.DeletionId != 0)
                     {
-                        node = new TreeNodeServerItem(item, fileName, 2, 2);
+                        node = new TreeNodeServerItem(item, fileName, 3, 3);
                     }
                     else
                     {
-                        node = new TreeNodeServerItem(item, fileName, 11, 11);
+                        node = new TreeNodeServerItem(item, fileName, 12, 12);
                     }
                 }
                 else
@@ -291,104 +313,106 @@ namespace TFV
                 m_selectedItems[node.ServerItem] = node;
             }
 
+
+
             return node;
 
-		}
-	
-		private void StartBackgroundWorkerIfNeeded()
-		{
-			if (this.m_toExpand.Count > 0 && !backgroundWorker.IsBusy)
-			{
+        }
+
+        private void StartBackgroundWorkerIfNeeded()
+        {
+            if (this.m_toExpand.Count > 0 && !backgroundWorker.IsBusy)
+            {
                 if (BackgroundWorkStarted != null)
                     BackgroundWorkStarted(this, EventArgs.Empty);
 
                 backgroundWorker.RunWorkerAsync(m_toExpand.ToArray());
-				m_toExpand.Clear();
-			}
-		}
+                m_toExpand.Clear();
+            }
+        }
 
-		private bool NodeNeedsExpansion(TreeNode toCheck)
-		{
-			return toCheck is TreeNodeServerItem && 1 == toCheck.Nodes.Count && toCheck.Nodes[0] is TreeNodeWorking;
-		}
+        private bool NodeNeedsExpansion(TreeNode toCheck)
+        {
+            return toCheck is TreeNodeServerItem && 1 == toCheck.Nodes.Count && toCheck.Nodes[0] is TreeNodeWorking;
+        }
 
-		private void Reset()
-		{
+        private void Reset()
+        {
             backgroundWorker.CancelAsync();
-			m_toExpand.Clear();
-			treeView.BeginUpdate();
+            m_toExpand.Clear();
+            treeView.BeginUpdate();
             treeView.Nodes.Clear();
             treeView.SelectedNode = this.AttachTreeNode(null, null);
             treeView.EndUpdate();
-		}
+        }
 
         private bool TryFindNodeByServerItem(string serverItem, TreeNodeServerItem startNode, out TreeNodeServerItem foundNode)
-		{
-			foundNode = null;
+        {
+            foundNode = null;
             if (treeView.Nodes.Count == 0 || !(treeView.Nodes[0] is TreeNodeServerItem))
-			{
-				return false;
-			}
-			if (startNode == null)
-			{
+            {
+                return false;
+            }
+            if (startNode == null)
+            {
                 foundNode = (TreeNodeServerItem)treeView.Nodes[0];
-			}
-			else
-			{
-				foundNode = startNode;
-			}
-			while (foundNode.ServerItem.Length < serverItem.Length)
-			{
-				if (this.NodeNeedsExpansion(foundNode))
-				{
-					return false;
-				}
-				int num = BinarySearchForNextNode(foundNode, serverItem);
-				if (num < 0)
-				{
-					return false;
-				}
+            }
+            else
+            {
+                foundNode = startNode;
+            }
+            while (foundNode.ServerItem.Length < serverItem.Length)
+            {
+                if (this.NodeNeedsExpansion(foundNode))
+                {
+                    return false;
+                }
+                int num = BinarySearchForNextNode(foundNode, serverItem);
+                if (num < 0)
+                {
+                    return false;
+                }
                 foundNode = (TreeNodeServerItem)foundNode.Nodes[num];
-			}
-			return true;
-		}
+            }
+            return true;
+        }
         private int BinarySearchForNextNode(TreeNodeServerItem node, string serverItem)
-		{
-			int num = node.ServerItem.Length;
-			if (serverItem[num] == '/')
-			{
-				num++;
-			}
-			int num2 = serverItem.IndexOf('/', num);
-			int num3 = ((num2 < 0) ? serverItem.Length : num2) - num;
-			int i = 0;
-			int num4 = node.Nodes.Count - 1;
-			while (i <= num4)
-			{
-				int num5 = i + (num4 - i >> 1);
+        {
+            int num = node.ServerItem.Length;
+            if (serverItem[num] == '/')
+            {
+                num++;
+            }
+            int num2 = serverItem.IndexOf('/', num);
+            int num3 = ((num2 < 0) ? serverItem.Length : num2) - num;
+            int i = 0;
+            int num4 = node.Nodes.Count - 1;
+            while (i <= num4)
+            {
+                int num5 = i + (num4 - i >> 1);
                 TreeNodeServerItem treeNodeServerFolder = (TreeNodeServerItem)node.Nodes[num5];
-				int num6 = treeNodeServerFolder.ServerItem.IndexOf('/', num);
-				int num7 = ((num6 < 0) ? treeNodeServerFolder.ServerItem.Length : num6) - num;
-				int num8 = string.Compare(treeNodeServerFolder.ServerItem, num, serverItem, num, Math.Min(num3, num7), StringComparison.OrdinalIgnoreCase);
-				if (num8 == 0)
-				{
-					if (num3 == num7)
-					{
-						return num5;
-					}
-					num8 = num7 - num3;
-				}
-				if (num8 < 0)
-				{
-					i = num5 + 1;
-				}
-				else
-				{
-					num4 = num5 - 1;
-				}
-			}
-			return ~i;
-		}
+                int num6 = treeNodeServerFolder.ServerItem.IndexOf('/', num);
+                int num7 = ((num6 < 0) ? treeNodeServerFolder.ServerItem.Length : num6) - num;
+                int num8 = string.Compare(treeNodeServerFolder.ServerItem, num, serverItem, num, Math.Min(num3, num7), StringComparison.OrdinalIgnoreCase);
+                if (num8 == 0)
+                {
+                    if (num3 == num7)
+                    {
+                        return num5;
+                    }
+                    num8 = num7 - num3;
+                }
+                if (num8 < 0)
+                {
+                    i = num5 + 1;
+                }
+                else
+                {
+                    num4 = num5 - 1;
+                }
+            }
+            return ~i;
+        }
 
         private bool m_showFiles = true;
 
@@ -399,7 +423,7 @@ namespace TFV
             Navigate(curItem != null ? curItem : "$/");
         }
 
-        public bool ShowFiles 
+        public bool ShowFiles
         {
             get { return m_showFiles; }
             set
@@ -412,11 +436,11 @@ namespace TFV
             }
         }
 
- 
+
         class TempItemSet
         {
             public string QueryPath;
-            public Item[] Items;
+            public ExtendedItem[] Items;
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -430,25 +454,31 @@ namespace TFV
             {
                 array[i] = new ItemSpec(VersionControlPath.Combine(queryItems[i], "*"), RecursionType.OneLevel);
             }
-            ItemSet[] itemSets = m_sourceControl.GetItems(array, this.m_versionSpec, this.m_deletedState, ShowFiles ? ItemType.Any : ItemType.Folder, GetItemsOptions.IncludeBranchInfo);
+            ExtendedItem[][] itemSets;
+            itemSets = m_workspace.GetExtendedItems(array, m_deletedState, ShowFiles ? ItemType.Any : ItemType.Folder, GetItemsOptions.IncludeBranchInfo);
             TempItemSet[] result = new TempItemSet[itemSets.Length];
             for (int i = 0; i < itemSets.Length; i++)
-                result[i] = new TempItemSet{ QueryPath = itemSets[i].QueryPath, Items = itemSets[i].Items};
-
-            if (m_versionSpec is WorkspaceVersionSpec)
             {
-                WorkspaceVersionSpec wsvs = m_versionSpec as WorkspaceVersionSpec;
-                Workspace ws = m_sourceControl.GetWorkspace(wsvs.Name, wsvs.OwnerName);
+                result[i] = new TempItemSet
+                {
+                    QueryPath = VersionControlPath.GetFolderName(array[i].Item),
+                    Items = itemSets[i].Where((item) => (item.TargetServerItem != queryItems[i] && (item.IsInWorkspace || !m_limitToWorkspace))).ToArray()
+                };
+            }
+
+            if (m_limitToWorkspace)
+            {
+                Workspace ws = m_workspace;
                 ws.RefreshIfNeeded();
                 var folders = ws.Folders;
                 foreach (TempItemSet its in result)
                 {
                     int desiredCloakDepth = VersionControlPath.GetFolderDepth(its.QueryPath) + 1;
                     string cloakedWeSaw = null;
-                    List<Item> newItems = new List<Item>();
+                    List<ItemSpec> newItems = new List<ItemSpec>();
                     foreach (var fldr in folders)
                     {
-                        if (fldr.IsCloaked &&  fldr.Depth != RecursionType.None && VersionControlPath.IsSubItem(fldr.ServerItem, its.QueryPath) &&
+                        if (fldr.IsCloaked && fldr.Depth != RecursionType.None && VersionControlPath.IsSubItem(fldr.ServerItem, its.QueryPath) &&
                             VersionControlPath.GetFolderDepth(fldr.ServerItem) == desiredCloakDepth)
                         {
                             cloakedWeSaw = fldr.ServerItem;
@@ -456,19 +486,24 @@ namespace TFV
                         else if (!fldr.IsCloaked && cloakedWeSaw != null && VersionControlPath.IsSubItem(fldr.ServerItem, cloakedWeSaw))
                         {
                             //we need this to keep going even if it's cloaked
-                            newItems.Add(m_sourceControl.GetItem(cloakedWeSaw));
+                            newItems.Add(new ItemSpec(cloakedWeSaw, RecursionType.None));
                             cloakedWeSaw = null;
                         }
                     }
                     if (newItems.Count > 0)
                     {
-                        newItems.AddRange(its.Items);
-                        its.Items = newItems.ToArray();
-                        Array.Sort(its.Items, Item.Comparer);
-                       
+                        ExtendedItem[] newExItems = new ExtendedItem[its.Items.Length + newItems.Count];
+                        Array.Copy(its.Items, newExItems, its.Items.Length);
+                        ExtendedItem[][] tempExItems = m_sourceControl.GetExtendedItems(newItems.ToArray(), m_deletedState, ItemType.Folder, GetItemsOptions.IncludeBranchInfo);
+                        for (int i = 0; i < tempExItems.Length; i++)
+                            newExItems[i + its.Items.Length] = tempExItems[i][0];
+
+                        Array.Sort(newExItems, (a, b) => a.TargetServerItem.CompareTo(b.TargetServerItem));
+                        its.Items = newExItems;
                     }
                 }
             }
+
             e.Result = result;
         }
 
@@ -497,7 +532,7 @@ namespace TFV
                         if (TryFindNodeByServerItem(itemSet.QueryPath, treeNodeServerFolder, out treeNodeServerFolder2) && NodeNeedsExpansion(treeNodeServerFolder2))
                         {
                             treeNodeServerFolder2.Nodes.Clear();
-                            foreach(Item i in itemSet.Items)
+                            foreach (ExtendedItem i in itemSet.Items)
                             {
                                 AttachTreeNode(treeNodeServerFolder2, i);
                             }
@@ -521,32 +556,6 @@ namespace TFV
                     m_navigateToWhenLoaded = null;
                 }
                 treeView.EndUpdate();
-            }
-        }
-
-        private void treeView_AfterCollapse(object sender, TreeViewEventArgs e)
-        {
-            if (e.Node is TreeNodeServerItem)
-            {
-                TreeNodeServerItem treeNodeServerFolder = (TreeNodeServerItem)e.Node;
-                if (treeNodeServerFolder.ImageIndex != treeNodeServerFolder.CollapsedImageIndex)
-                {
-                    treeNodeServerFolder.ImageIndex = treeNodeServerFolder.CollapsedImageIndex;
-                    treeNodeServerFolder.SelectedImageIndex = treeNodeServerFolder.CollapsedImageIndex;
-                }
-            }
-        }
-
-        private void treeView_AfterExpand(object sender, TreeViewEventArgs e)
-        {
-            if (e.Node is TreeNodeServerItem)
-            {
-                TreeNodeServerItem treeNodeServerFolder = (TreeNodeServerItem)e.Node;
-                if (treeNodeServerFolder.ImageIndex != treeNodeServerFolder.ExpandedImageIndex)
-                {
-                    treeNodeServerFolder.ImageIndex = treeNodeServerFolder.ExpandedImageIndex;
-                    treeNodeServerFolder.SelectedImageIndex = treeNodeServerFolder.ExpandedImageIndex;
-                }
             }
         }
 
@@ -608,7 +617,7 @@ namespace TFV
                 {
                     if (!ModifierKeys.HasFlag(Keys.Control))
                     {
-                        ClearExistingNodeSelection(new string[] { treeNodeServerFolder.ServerItem } );
+                        ClearExistingNodeSelection(new string[] { treeNodeServerFolder.ServerItem });
                     }
                     SetExistingNodeSelection(treeNodeServerFolder, ModifierKeys.HasFlag(Keys.Control));
                 }
@@ -617,6 +626,65 @@ namespace TFV
                 this.m_lastSelectedPath = treeNodeServerFolder.ServerItem;
                 if (LastSelectedServerItemChanged != null)
                     LastSelectedServerItemChanged(this, new EventArgs());
+            }
+        }
+
+        private void treeView_DrawNode(object sender, DrawTreeNodeEventArgs e)
+        {
+            TreeNodeServerItem titem = e.Node as TreeNodeServerItem;
+
+            if (titem != null)
+            {
+
+                VisualStyleElement element = VisualStyleElement.TreeView.Item.Normal;
+                if (e.State.HasFlag(TreeNodeStates.Selected) || titem.IsMultiSelect)
+                {
+                    element = e.Node.TreeView.Focused ? VisualStyleElement.TreeView.Item.Selected : VisualStyleElement.TreeView.Item.SelectedNotFocus;
+                }
+                else if (e.State.HasFlag(TreeNodeStates.Hot))
+                {
+                    element = VisualStyleElement.TreeView.Item.Hot;
+                }
+
+                VisualStyleRenderer vsr = new VisualStyleRenderer("Explorer::TreeView", element.Part, element.State);
+                Point drawLoc = titem.Bounds.Location;
+                drawLoc.X -= imageListIcons.ImageSize.Width;
+                using (SolidBrush b = new SolidBrush(titem.BackColor))
+                {
+                    e.Graphics.FillRectangle(b, drawLoc.X, drawLoc.Y, titem.Bounds.Width + imageListIcons.ImageSize.Width, titem.Bounds.Height);
+                }
+                Rectangle textRect = vsr.GetBackgroundContentRectangle(e.Graphics, titem.Bounds);
+
+                var pixelSize = DpiHelper.LogicalToDeviceUnits(new Size(1, 1));
+                textRect.Offset(pixelSize.Width, pixelSize.Height);
+                bool disabled = titem.ExItem != null ? !titem.ExItem.IsInWorkspace : false;
+                vsr.DrawText(e.Graphics, textRect, titem.Text, disabled, TextFormatFlags.VerticalCenter | TextFormatFlags.LeftAndRightPadding | TextFormatFlags.GlyphOverhangPadding);
+
+                imageListIcons.Draw(e.Graphics, drawLoc, titem.IsExpanded ? titem.ExpandedImageIndex : titem.CollapsedImageIndex);
+                ExtendedItem item = titem.ExItem;
+                if (item != null)
+                {
+
+                    if (item.ChangeType.HasFlag(ChangeType.Add))
+                        imageListOverlays.Draw(e.Graphics, drawLoc, 0);
+                    else if (item.ChangeType.HasFlag(ChangeType.Delete))
+                        imageListOverlays.Draw(e.Graphics, drawLoc, 3);
+                    else if (item.ChangeType.HasFlag(ChangeType.Rollback))
+                        imageListOverlays.Draw(e.Graphics, drawLoc, 8);
+                    else if (item.ChangeType.HasFlag(ChangeType.Merge))
+                        imageListOverlays.Draw(e.Graphics, drawLoc, 5);
+                    else if (item.ChangeType.HasFlag(ChangeType.Edit))
+                        imageListOverlays.Draw(e.Graphics, drawLoc, 2);
+
+                    if (!item.IsLatest && item.IsInWorkspace)
+                    {
+                        imageListOverlays.Draw(e.Graphics, drawLoc, 1);
+                    }
+                    if (item.HasOtherPendingChange)
+                    {
+                        imageListOverlays.Draw(e.Graphics, drawLoc, 7);
+                    }
+                }
             }
         }
 

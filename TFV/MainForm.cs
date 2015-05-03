@@ -37,6 +37,7 @@ namespace TFV
             Text = "TFV - " + m_projectCollection.ToString();
 
             stvServerTreeView.SourceControl = m_vcServer;
+            stvServerTreeView.Workspace = m_workspace;
             UpdateLimitViewToWorkspace();
             UpdateShowDeleted();
 
@@ -131,12 +132,12 @@ namespace TFV
         {
             if (Program.Settings.LimitViewToWorkspace)
             {
-                stvServerTreeView.VersionSpec = new WorkspaceVersionSpec(m_workspace);
+                stvServerTreeView.LimitToWorkspace = true;
                 menuInWorkspace.Checked = true;
             }
             else
             {
-                stvServerTreeView.VersionSpec = VersionSpec.Latest;
+                stvServerTreeView.LimitToWorkspace = false;
                 menuInWorkspace.Checked = false;
             }
         }
