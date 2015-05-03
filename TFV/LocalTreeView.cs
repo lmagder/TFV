@@ -19,6 +19,7 @@ namespace TFV
 {
     public partial class LocalTreeView : UserControl
     {
+        Icon m_fileIcon, m_addedFileIcon, m_folderOpen, m_folderClosed;
         public LocalTreeView()
         {
             InitializeComponent();
@@ -42,6 +43,11 @@ namespace TFV
             temp.ImageSize = DpiHelper.LogicalToDeviceUnits(new Size(16,16));
             temp.ColorDepth = ColorDepth.Depth32Bit;
             treeView.ImageList = temp;
+
+            m_fileIcon = NativeMethods.GetSmallIcon(NativeMethods.SHSTOCKICONID.SIID_DOCNOASSOC);
+            m_addedFileIcon = NativeMethods.GetSmallIcon(NativeMethods.SHSTOCKICONID.SIID_DOCASSOC);
+            m_folderOpen = NativeMethods.GetSmallIcon(NativeMethods.SHSTOCKICONID.SIID_FOLDEROPEN);
+            m_folderClosed = NativeMethods.GetSmallIcon(NativeMethods.SHSTOCKICONID.SIID_FOLDERBACK);
         }
 
 
@@ -73,6 +79,10 @@ namespace TFV
                 [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
                 public string szTypeName;
             };
+
+            [DllImport("user32.dll", SetLastError = true)]
+            static extern bool DestroyIcon(IntPtr hIcon);
+
             private const uint SHGFI_ICON = 0x100;
             private const uint SHGFI_LARGEICON = 0x0; // 'Large icon
             private const uint SHGFI_SMALLICON = 0x1; // 'Small icon
@@ -81,15 +91,165 @@ namespace TFV
             {
                 SHFILEINFO shinfo = new SHFILEINFO();
                 IntPtr hImgLarge = SHGetFileInfo(file, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_LARGEICON);
-                return System.Drawing.Icon.FromHandle(shinfo.hIcon);
+                Icon ret = Icon.FromHandle(shinfo.hIcon);
+                //DestroyIcon(shinfo.hIcon);
+                return ret;
             }
 
             public static System.Drawing.Icon GetSmallIcon(string file)
             {
                 SHFILEINFO shinfo = new SHFILEINFO();
                 IntPtr hImgLarge = SHGetFileInfo(file, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_SMALLICON);
-                return System.Drawing.Icon.FromHandle(shinfo.hIcon);
+                Icon ret = Icon.FromHandle(shinfo.hIcon);
+                //DestroyIcon(shinfo.hIcon);
+                return ret;
             }
+
+            public enum SHSTOCKICONID : uint
+            {
+                SIID_DOCNOASSOC = 0,
+                SIID_DOCASSOC = 1,
+                SIID_APPLICATION = 2,
+                SIID_FOLDER = 3,
+                SIID_FOLDEROPEN = 4,
+                SIID_DRIVE525 = 5,
+                SIID_DRIVE35 = 6,
+                SIID_DRIVEREMOVE = 7,
+                SIID_DRIVEFIXED = 8,
+                SIID_DRIVENET = 9,
+                SIID_DRIVENETDISABLED = 10,
+                SIID_DRIVECD = 11,
+                SIID_DRIVERAM = 12,
+                SIID_WORLD = 13,
+                SIID_SERVER = 15,
+                SIID_PRINTER = 16,
+                SIID_MYNETWORK = 17,
+                SIID_FIND = 22,
+                SIID_HELP = 23,
+                SIID_SHARE = 28,
+                SIID_LINK = 29,
+                SIID_SLOWFILE = 30,
+                SIID_RECYCLER = 31,
+                SIID_RECYCLERFULL = 32,
+                SIID_MEDIACDAUDIO = 40,
+                SIID_LOCK = 47,
+                SIID_AUTOLIST = 49,
+                SIID_PRINTERNET = 50,
+                SIID_SERVERSHARE = 51,
+                SIID_PRINTERFAX = 52,
+                SIID_PRINTERFAXNET = 53,
+                SIID_PRINTERFILE = 54,
+                SIID_STACK = 55,
+                SIID_MEDIASVCD = 56,
+                SIID_STUFFEDFOLDER = 57,
+                SIID_DRIVEUNKNOWN = 58,
+                SIID_DRIVEDVD = 59,
+                SIID_MEDIADVD = 60,
+                SIID_MEDIADVDRAM = 61,
+                SIID_MEDIADVDRW = 62,
+                SIID_MEDIADVDR = 63,
+                SIID_MEDIADVDROM = 64,
+                SIID_MEDIACDAUDIOPLUS = 65,
+                SIID_MEDIACDRW = 66,
+                SIID_MEDIACDR = 67,
+                SIID_MEDIACDBURN = 68,
+                SIID_MEDIABLANKCD = 69,
+                SIID_MEDIACDROM = 70,
+                SIID_AUDIOFILES = 71,
+                SIID_IMAGEFILES = 72,
+                SIID_VIDEOFILES = 73,
+                SIID_MIXEDFILES = 74,
+                SIID_FOLDERBACK = 75,
+                SIID_FOLDERFRONT = 76,
+                SIID_SHIELD = 77,
+                SIID_WARNING = 78,
+                SIID_INFO = 79,
+                SIID_ERROR = 80,
+                SIID_KEY = 81,
+                SIID_SOFTWARE = 82,
+                SIID_RENAME = 83,
+                SIID_DELETE = 84,
+                SIID_MEDIAAUDIODVD = 85,
+                SIID_MEDIAMOVIEDVD = 86,
+                SIID_MEDIAENHANCEDCD = 87,
+                SIID_MEDIAENHANCEDDVD = 88,
+                SIID_MEDIAHDDVD = 89,
+                SIID_MEDIABLURAY = 90,
+                SIID_MEDIAVCD = 91,
+                SIID_MEDIADVDPLUSR = 92,
+                SIID_MEDIADVDPLUSRW = 93,
+                SIID_DESKTOPPC = 94,
+                SIID_MOBILEPC = 95,
+                SIID_USERS = 96,
+                SIID_MEDIASMARTMEDIA = 97,
+                SIID_MEDIACOMPACTFLASH = 98,
+                SIID_DEVICECELLPHONE = 99,
+                SIID_DEVICECAMERA = 100,
+                SIID_DEVICEVIDEOCAMERA = 101,
+                SIID_DEVICEAUDIOPLAYER = 102,
+                SIID_NETWORKCONNECT = 103,
+                SIID_INTERNET = 104,
+                SIID_ZIPFILE = 105,
+                SIID_SETTINGS = 106,
+                SIID_DRIVEHDDVD = 132,
+                SIID_DRIVEBD = 133,
+                SIID_MEDIAHDDVDROM = 134,
+                SIID_MEDIAHDDVDR = 135,
+                SIID_MEDIAHDDVDRAM = 136,
+                SIID_MEDIABDROM = 137,
+                SIID_MEDIABDR = 138,
+                SIID_MEDIABDRE = 139,
+                SIID_CLUSTEREDDRIVE = 140,
+                SIID_MAX_ICONS = 175
+            }
+
+            [Flags]
+            public enum SHGSI : uint
+            {
+                SHGSI_ICONLOCATION = 0,
+                SHGSI_ICON = 0x000000100,
+                SHGSI_SYSICONINDEX = 0x000004000,
+                SHGSI_LINKOVERLAY = 0x000008000,
+                SHGSI_SELECTED = 0x000010000,
+                SHGSI_LARGEICON = 0x000000000,
+                SHGSI_SMALLICON = 0x000000001,
+                SHGSI_SHELLICONSIZE = 0x000000004
+            }
+
+            [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+            public struct SHSTOCKICONINFO
+            {
+                public UInt32 cbSize;
+                public IntPtr hIcon;
+                public Int32 iSysIconIndex;
+                public Int32 iIcon;
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x00000104)]
+                public string szPath;
+            }
+
+            [DllImport("Shell32.dll", SetLastError = false, PreserveSig=false)]
+            public static extern void SHGetStockIconInfo(SHSTOCKICONID siid, SHGSI uFlags, ref SHSTOCKICONINFO psii);
+
+            public static System.Drawing.Icon GetLargeIcon(SHSTOCKICONID id)
+            {
+                SHSTOCKICONINFO shinfo = new SHSTOCKICONINFO();
+                shinfo.cbSize = (UInt32)Marshal.SizeOf(shinfo);
+                SHGetStockIconInfo(id, SHGSI.SHGSI_ICON | SHGSI.SHGSI_LARGEICON, ref shinfo);
+                Icon ret = Icon.FromHandle(shinfo.hIcon);
+                //DestroyIcon(shinfo.hIcon);
+                return ret;
+            }
+
+            public static System.Drawing.Icon GetSmallIcon(SHSTOCKICONID id)
+            {
+                SHSTOCKICONINFO shinfo = new SHSTOCKICONINFO();
+                shinfo.cbSize = (UInt32)Marshal.SizeOf(shinfo);
+                SHGetStockIconInfo(id, SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON, ref shinfo);
+                Icon ret = Icon.FromHandle(shinfo.hIcon);
+                //DestroyIcon(shinfo.hIcon);
+                return ret;
+            }
+
         }
         private VersionControlServer m_sourceControl;
         private Workspace m_workspace;
@@ -221,10 +381,34 @@ namespace TFV
                     return;
                 }
 
-                List<string> list = new List<string>();
-                m_toExpand.AddRange(initialPath.Split('\\'));
-                m_navigateToWhenLoaded = initialPath;
-                StartBackgroundWorkerIfNeeded();
+                var roots = WorkingFolder.GetWorkspaceRoots(m_workspace.Folders);
+                foreach(String root in roots)
+                {
+                    if (FileSpec.IsSubItem(initialPath, root))
+                    {
+                        string[] folders = initialPath.Substring(root.Length+1).Split('\\');
+                        string curPath = root;
+                        string prevPath = root;
+                        foundItem = null;
+                        m_navigateToWhenLoaded = null;
+                        for (int i = 0; i < folders.Length; i++)
+                        {
+                            prevPath = curPath;
+                            curPath = curPath + "\\" + folders[i];
+                            if (TryFindNodeByServerItem(curPath, foundItem, out foundItem))
+                            {
+                                foundItem.EnsureVisible();
+                            }
+                            else
+                            {
+                                m_toExpand.Add(prevPath);
+                                m_navigateToWhenLoaded = initialPath;
+                            }
+                        }
+                        StartBackgroundWorkerIfNeeded();
+                        break;
+                    }
+                }
             }
         }
 
@@ -305,7 +489,7 @@ namespace TFV
             m_toExpand.Clear();
             treeView.BeginUpdate();
             treeView.Nodes.Clear();
-            TreeNodeLocalItem root = AttachTreeNode(null, m_workspace != null ? m_workspace.DisplayName : "wat?", new TempItemSet.TempItem());
+            TreeNodeLocalItem root = AttachTreeNode(null, m_workspace != null ? m_workspace.Name : "wat?", new TempItemSet.TempItem());
             treeView.SelectedNode = root;
             if (m_workspace != null)
             {
@@ -465,12 +649,15 @@ namespace TFV
                     catch (ItemNotMappedException) { }
                     catch (ItemCloakedException) { }
                 }
-                ExtendedItem[][] itemSets = m_workspace.GetExtendedItems(tempList.ToArray(), DeletedState.Any, ItemType.Any);
-                for (int j = 0; j < itemSets.Length; j++)
+                if (tempList.Count > 0)
                 {
-                    if (itemSets[j].Length > 0)
+                    ExtendedItem[][] itemSets = m_workspace.GetExtendedItems(tempList.ToArray(), DeletedState.Any, ItemType.Any);
+                    for (int j = 0; j < itemSets.Length; j++)
                     {
-                        result[i].Items[tempIndx[j]].ServerItem = itemSets[j][0];
+                        if (itemSets[j].Length > 0)
+                        {
+                            result[i].Items[tempIndx[j]].ServerItem = itemSets[j][0];
+                        }
                     }
                 }
                 Array.Sort(result[i].Items, (a, b) => a.LocalPath.CompareTo(b.LocalPath));
@@ -634,10 +821,28 @@ namespace TFV
                 vsr.DrawText(e.Graphics, textRect, titem.Text, disabled, TextFormatFlags.VerticalCenter | TextFormatFlags.LeftAndRightPadding);
 
                 ExtendedItem item = titem.ExItem;
+                if (string.IsNullOrEmpty(titem.LocalItem))
+                {
+                    e.Graphics.DrawIcon(TFV.Properties.Resources.TFSServer, new Rectangle(drawLoc, imageSize));
+                }
+                else
+                {
+                    bool isFolder = false;
+                    if (item != null)
+                        isFolder = item.ItemType == ItemType.Folder;
+                    else
+                        isFolder = Directory.Exists(titem.LocalItem);
 
-                Icon fileIcon = string.IsNullOrEmpty(titem.LocalItem) ? TFV.Properties.Resources.TFSServer : NativeMethods.GetSmallIcon(titem.LocalItem);
-                e.Graphics.DrawIcon(fileIcon, new Rectangle(drawLoc, imageSize));
-               
+                    if (isFolder)
+                    {
+                        e.Graphics.DrawIcon(titem.IsExpanded ? m_folderOpen : m_folderClosed, new Rectangle(drawLoc, imageSize));
+                    }
+                    else
+                    {
+                        e.Graphics.DrawIcon((item != null) ? m_addedFileIcon : m_fileIcon, new Rectangle(drawLoc, imageSize));
+                    }
+                }
+                
                 if (item != null)
                 {
                     if (item.ChangeType.HasFlag(ChangeType.Add))
@@ -681,8 +886,30 @@ namespace TFV
         {
             if (!NodeNeedsExpansion(e.Node) && e.Node.Nodes.Count > 0)
             {
+                foreach (TreeNode n in e.Node.Nodes)
+                {
+                    if (n is TreeNodeLocalItem)
+                    {
+                        PurgeSelectionReferences((TreeNodeLocalItem)n);
+                    }
+                }
                 e.Node.Nodes.Clear();
                 e.Node.Nodes.Add(new TreeNodeWorking());
+            }
+        }
+
+        void PurgeSelectionReferences(TreeNodeLocalItem root)
+        {
+            if (root.IsMultiSelect)
+            {
+                m_selectedItems[root.LocalItem] = null;
+            }
+            foreach(TreeNode n in root.Nodes)
+            {
+                if (n is TreeNodeLocalItem)
+                {
+                    PurgeSelectionReferences((TreeNodeLocalItem)n);
+                }
             }
         }
     }

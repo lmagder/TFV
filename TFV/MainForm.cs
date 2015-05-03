@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Microsoft.TeamFoundation.Common;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
@@ -69,6 +70,13 @@ namespace TFV
             if (tcTrees.SelectedTab == tbServer)
             {
                 cbAddress.Text = stvServerTreeView.LastSelectedServerItem;
+                ltvLocalTreeView.Navigate(m_workspace.TryGetLocalItemForServerItem(cbAddress.Text));
+            }
+            else
+            {
+                cbAddress.Text = ltvLocalTreeView.LastSelectedServerItem;
+                if (!string.IsNullOrWhiteSpace(cbAddress.Text))
+                    stvServerTreeView.Navigate(m_workspace.TryGetServerItemForLocalItem(cbAddress.Text));
             }
         }
 
@@ -117,6 +125,11 @@ namespace TFV
             if (tcTrees.SelectedTab == tbServer)
             {
                 if (!VersionControlPath.IsValidPath(cbAddress.Text.Trim()))
+                    e.Cancel = true;
+            }
+            else
+            {
+                if (!FileSpec.IsLegalNtfsName(cbAddress.Text.Trim(), (int)PathLength.MaxLength, false))
                     e.Cancel = true;
             }
         }
@@ -190,6 +203,11 @@ namespace TFV
                 if (VersionControlPath.IsValidPath(cbAddress.Text))
                     stvServerTreeView.Navigate(cbAddress.Text);
             }
+            else
+            {
+                if (FileSpec.IsLegalNtfsName(cbAddress.Text, (int)PathLength.MaxLength, false))
+                    ltvLocalTreeView.Navigate(cbAddress.Text);
+            }
         }
 
 
@@ -212,6 +230,26 @@ namespace TFV
                         cbAddress.Items.Add(cbAddress.Text);
                     }
                 }
+                else
+                {
+                    if (FileSpec.IsLegalNtfsName(cbAddress.Text, (int)PathLength.MaxLength, false))
+                    {
+                        ltvLocalTreeView.Navigate(cbAddress.Text);
+                        cbAddress.Items.Add(cbAddress.Text);
+                    }
+                }
+            }
+        }
+
+        private void tcTrees_Selected(object sender, TabControlEventArgs e)
+        {
+            if (tcTrees.SelectedTab == tbServer)
+            {
+                cbAddress.Text = stvServerTreeView.LastSelectedServerItem;
+            }
+            else
+            {
+                cbAddress.Text = ltvLocalTreeView.LastSelectedServerItem;
             }
         }
 

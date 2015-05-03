@@ -216,19 +216,28 @@ namespace TFV
                     return;
                 }
 
-                List<string> list = new List<string>();
-                string folderName = VersionControlPath.GetFolderName(initialPath);
-                while (!VersionControlPath.Equals(folderName, "$/"))
+                string[] folders = initialPath.Substring(2).Split('/');
+                string curPath = "$/";
+                string prevPath = curPath;
+                foundItem = null;
+                m_navigateToWhenLoaded = null;
+                for (int i = 0; i < folders.Length; i++)
                 {
-                    list.Add(folderName);
-                    folderName = VersionControlPath.GetFolderName(folderName);
+                    prevPath = curPath;
+                    curPath = curPath + "/" + folders[i];
+                    if (TryFindNodeByServerItem(curPath, foundItem, out foundItem))
+                    {
+                        foundItem.EnsureVisible();
+                    }
+                    else
+                    {
+                        m_toExpand.Add(prevPath);
+                        m_navigateToWhenLoaded = initialPath;
+                    }
                 }
-                list.Add("$/");
-                list.Reverse();
-                m_toExpand.AddRange(list);
-                m_navigateToWhenLoaded = initialPath;
                 StartBackgroundWorkerIfNeeded();
             }
+           
         }
 
         private TreeNodeServerItem AttachTreeNode(TreeNode parent, ExtendedItem item)
@@ -498,10 +507,14 @@ namespace TFV
                         for (int i = 0; i < tempExItems.Length; i++)
                             newExItems[i + its.Items.Length] = tempExItems[i][0];
 
-                        Array.Sort(newExItems, (a, b) => a.TargetServerItem.CompareTo(b.TargetServerItem));
                         its.Items = newExItems;
                     }
                 }
+            }
+
+            foreach (TempItemSet its in result)
+            {
+                Array.Sort(its.Items, (a, b) => a.TargetServerItem.CompareTo(b.TargetServerItem));
             }
 
             e.Result = result;
@@ -705,8 +718,30 @@ namespace TFV
         {
             if (!NodeNeedsExpansion(e.Node) && e.Node.Nodes.Count > 0)
             {
+                foreach (TreeNode n in e.Node.Nodes)
+                {
+                    if (n is TreeNodeServerItem)
+                    {
+                        PurgeSelectionReferences((TreeNodeServerItem)n);
+                    }
+                }
                 e.Node.Nodes.Clear();
                 e.Node.Nodes.Add(new TreeNodeWorking());
+            }
+        }
+
+        void PurgeSelectionReferences(TreeNodeServerItem root)
+        {
+            if (root.IsMultiSelect)
+            {
+                m_selectedItems[root.ServerItem] = null;
+            }
+            foreach (TreeNode n in root.Nodes)
+            {
+                if (n is TreeNodeServerItem)
+                {
+                    PurgeSelectionReferences((TreeNodeServerItem)n);
+                }
             }
         }
     }
