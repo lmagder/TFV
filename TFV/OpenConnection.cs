@@ -14,7 +14,6 @@ using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.VersionControl.Controls;
 using Microsoft.TeamFoundation;
 using Microsoft.TeamFoundation.Framework.Common;
-using Microsoft.VisualStudio.Services.Common;
 
 namespace TFV
 {
@@ -160,7 +159,7 @@ namespace TFV
                     Close();
 
                 }
-                catch(ItemNotMappedException ex)
+                catch (Microsoft.TeamFoundation.VersionControl.Client.ItemNotMappedException ex)
                 {
                     MessageBox.Show(this, "Invalid workspace: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;

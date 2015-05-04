@@ -640,14 +640,12 @@ namespace TFV
                 for (int j = 0; j < filenames.Length; j++)
                 {
                     result[i].Items[j].LocalPath = filenames[j];
-                    try
+                    string tfsPath = m_workspace.TryGetServerItemForLocalItem(filenames[j]);
+                    if (tfsPath != null)
                     {
-                        string tfsPath = m_workspace.GetServerItemForLocalItem(filenames[j]);
                         tempList.Add(new ItemSpec(tfsPath, RecursionType.None));
                         tempIndx.Add(j);
                     }
-                    catch (ItemNotMappedException) { }
-                    catch (ItemCloakedException) { }
                 }
                 if (tempList.Count > 0)
                 {

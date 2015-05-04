@@ -40,9 +40,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tcTrees = new System.Windows.Forms.TabControl();
             this.tbServer = new System.Windows.Forms.TabPage();
-            this.stvServerTreeView = new TFV.ServerTreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.ltvLocalTreeView = new TFV.LocalTreeView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -57,6 +55,8 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusBarProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.stvServerTreeView = new TFV.ServerTreeView();
+            this.ltvLocalTreeView = new TFV.LocalTreeView();
             menuItem1 = new System.Windows.Forms.MenuItem();
             menuItem3 = new System.Windows.Forms.MenuItem();
             menuItem2 = new System.Windows.Forms.MenuItem();
@@ -129,8 +129,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(888, 397);
-            this.splitContainer1.SplitterDistance = 294;
+            this.splitContainer1.Size = new System.Drawing.Size(888, 334);
+            this.splitContainer1.SplitterDistance = 246;
             this.splitContainer1.TabIndex = 2;
             // 
             // splitContainer2
@@ -146,7 +146,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tabControl2);
-            this.splitContainer2.Size = new System.Drawing.Size(888, 294);
+            this.splitContainer2.Size = new System.Drawing.Size(888, 246);
             this.splitContainer2.SplitterDistance = 296;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -158,7 +158,7 @@
             this.tcTrees.Location = new System.Drawing.Point(0, 0);
             this.tcTrees.Name = "tcTrees";
             this.tcTrees.SelectedIndex = 0;
-            this.tcTrees.Size = new System.Drawing.Size(296, 294);
+            this.tcTrees.Size = new System.Drawing.Size(296, 246);
             this.tcTrees.TabIndex = 0;
             this.tcTrees.Selected += new System.Windows.Forms.TabControlEventHandler(this.tcTrees_Selected);
             // 
@@ -168,24 +168,10 @@
             this.tbServer.Location = new System.Drawing.Point(4, 22);
             this.tbServer.Name = "tbServer";
             this.tbServer.Padding = new System.Windows.Forms.Padding(3);
-            this.tbServer.Size = new System.Drawing.Size(288, 268);
+            this.tbServer.Size = new System.Drawing.Size(288, 220);
             this.tbServer.TabIndex = 0;
             this.tbServer.Text = "Server";
             this.tbServer.UseVisualStyleBackColor = true;
-            // 
-            // stvServerTreeView
-            // 
-            this.stvServerTreeView.DeletedState = Microsoft.TeamFoundation.VersionControl.Client.DeletedState.NonDeleted;
-            this.stvServerTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stvServerTreeView.LimitToWorkspace = false;
-            this.stvServerTreeView.Location = new System.Drawing.Point(3, 3);
-            this.stvServerTreeView.Margin = new System.Windows.Forms.Padding(6);
-            this.stvServerTreeView.Name = "stvServerTreeView";
-            this.stvServerTreeView.ShowFiles = true;
-            this.stvServerTreeView.Size = new System.Drawing.Size(282, 262);
-            this.stvServerTreeView.SourceControl = null;
-            this.stvServerTreeView.TabIndex = 0;
-            this.stvServerTreeView.Workspace = null;
             // 
             // tabPage2
             // 
@@ -193,21 +179,10 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(288, 268);
+            this.tabPage2.Size = new System.Drawing.Size(288, 236);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Workspace";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // ltvLocalTreeView
-            // 
-            this.ltvLocalTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ltvLocalTreeView.Location = new System.Drawing.Point(3, 3);
-            this.ltvLocalTreeView.Name = "ltvLocalTreeView";
-            this.ltvLocalTreeView.ShowFiles = true;
-            this.ltvLocalTreeView.Size = new System.Drawing.Size(282, 262);
-            this.ltvLocalTreeView.SourceControl = null;
-            this.ltvLocalTreeView.TabIndex = 0;
-            this.ltvLocalTreeView.Workspace = null;
             // 
             // tabControl2
             // 
@@ -217,7 +192,7 @@
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(588, 294);
+            this.tabControl2.Size = new System.Drawing.Size(588, 246);
             this.tabControl2.TabIndex = 0;
             // 
             // tabPage3
@@ -225,7 +200,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(580, 268);
+            this.tabPage3.Size = new System.Drawing.Size(580, 220);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -235,7 +210,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(580, 268);
+            this.tabPage4.Size = new System.Drawing.Size(580, 236);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -248,7 +223,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(888, 99);
+            this.textBox1.Size = new System.Drawing.Size(888, 84);
             this.textBox1.TabIndex = 0;
             this.textBox1.WordWrap = false;
             // 
@@ -332,7 +307,7 @@
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusBarProgress});
             this.statusBar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.statusBar.Location = new System.Drawing.Point(0, 424);
+            this.statusBar.Location = new System.Drawing.Point(0, 361);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(888, 22);
             this.statusBar.TabIndex = 3;
@@ -349,11 +324,36 @@
             this.statusBarProgress.Value = 50;
             this.statusBarProgress.Visible = false;
             // 
+            // stvServerTreeView
+            // 
+            this.stvServerTreeView.DeletedState = Microsoft.TeamFoundation.VersionControl.Client.DeletedState.NonDeleted;
+            this.stvServerTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stvServerTreeView.LimitToWorkspace = false;
+            this.stvServerTreeView.Location = new System.Drawing.Point(3, 3);
+            this.stvServerTreeView.Margin = new System.Windows.Forms.Padding(6);
+            this.stvServerTreeView.Name = "stvServerTreeView";
+            this.stvServerTreeView.ShowFiles = true;
+            this.stvServerTreeView.Size = new System.Drawing.Size(282, 214);
+            this.stvServerTreeView.SourceControl = null;
+            this.stvServerTreeView.TabIndex = 0;
+            this.stvServerTreeView.Workspace = null;
+            // 
+            // ltvLocalTreeView
+            // 
+            this.ltvLocalTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ltvLocalTreeView.Location = new System.Drawing.Point(3, 3);
+            this.ltvLocalTreeView.Name = "ltvLocalTreeView";
+            this.ltvLocalTreeView.ShowFiles = true;
+            this.ltvLocalTreeView.Size = new System.Drawing.Size(282, 230);
+            this.ltvLocalTreeView.SourceControl = null;
+            this.ltvLocalTreeView.TabIndex = 0;
+            this.ltvLocalTreeView.Workspace = null;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(888, 446);
+            this.ClientSize = new System.Drawing.Size(888, 383);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.statusBar);

@@ -13,7 +13,6 @@ using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
 using Microsoft.TeamFoundation.VersionControl.Controls;
-using Microsoft.TeamFoundation.VersionControl.Controls.Common;
 using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation;
 
